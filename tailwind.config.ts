@@ -11,6 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        darkCustom: '#1F293A',
+        primary: '#3ACBB6',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
