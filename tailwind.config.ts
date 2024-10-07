@@ -13,6 +13,7 @@ const config: Config = {
         foreground: "var(--foreground)",
         darkCustom: '#1F293A',
         primary: '#3ACBB6',
+        abu: '#F7F7F7',
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
