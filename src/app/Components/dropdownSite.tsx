@@ -9,9 +9,10 @@ const Sites = [
   
   return (
     <div className="p-6">
-      <select name="site" className=''>
+      <span>Lokasi:</span>
+      <select name="site" className='bg-white font-bold '>
         {Sites.map(option => (
-          <option value={option.title}>{option.title}</option>
+          <option className='bg-white' value={option.title}>{option.title} </option>
         ))}
       </select>
     </div>
