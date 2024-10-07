@@ -23,6 +23,7 @@
 
 // src/app/page.tsx
 import type { Metadata } from "next";
+import { useState } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,8 +32,46 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
+    <div className="p-6">
+      <div className="flex gap-5">
+        <div className="bg-gray-600 flex-grow-[4] h-96 rounded-xl"></div>
+        <div className="flex-grow h-96">
+          {/* All sections wrapped in a single column container with gap */}
+          <div className="flex flex-col gap-y-2">
+            {/* Tanaman & Umur Tanam - SECTION 1 */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex-grow bg-abu p-2 rounded-md">
+                <h5 className="mb-5 font-medium">Tanaman</h5>
+                <span className="font-bold text-xl">Padi Hibrida</span>
+              </div>
+              <div className="flex-grow bg-abu p-2 rounded-md">
+                <h5 className="mb-5 font-medium">Umur Tanam</h5>
+                <span className="font-bold text-xl">46 HST</span>
+              </div>
+            </div>
+
+            {/* Tanggal Tanam - SECTION 2 */}
+            <div className="bg-abu p-2 rounded-md">
+              <h5 className="mb-5 font-medium">Tanggal Tanam</h5>
+              <span className="font-bold text-xl">2024-08-08 07:00:00</span>
+            </div>
+            
+            {/* Fase Tanam - SECTION 3 */}
+            <div className="bg-abu p-2 rounded-md">
+              <h5 className="mb-5 font-medium">Fase Tanam</h5>
+              <span className="font-bold text-xl">Fase 4</span>
+            </div>
+            
+            {/* Waktu Panen - SECTION 4 */}
+            <div className="bg-primary p-2 rounded-md text-white">
+              <h5 className="mb-7 font-medium">Waktu Menuju Panen</h5>
+              <span className="font-bold text-xl">52 Hari</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+
   );
 }
