@@ -37,6 +37,7 @@
 import "./globals.css";
 import Header from "./Components/header";
 import Sidebar from "./Components/sidebar";
+import Site from "./Components/dropdownSite";
 
 export default function RootLayout({
   children,
@@ -51,6 +52,7 @@ export default function RootLayout({
 
           <div className="flex-grow">
             <Header title="Dashboard" />
+            <Site />
             {children}
           </div>
         </div>
