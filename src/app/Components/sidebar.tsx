@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
             <div className="flex-grow">
                 <ul className="pt-2">
                     {Menus.map((menu, index) => (
-                        <li key={index} className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-200 py-2 px-6 gap-x-4 flex ${menu.spacing ? "mt-10" : "mt-3"}`}>
+                        <li key={index} className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-500 py-2 px-6 gap-x-4 flex ${menu.spacing ? "mt-10" : "mt-3"}`}>
                             <span className="block float-left text-3xl">
                                 {menu.icon}
                             </span>
@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
             </div>
 
             {/* PROFILE */}
-            <div className="items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-200 py-4 gap-x-4 flex px-6">
+            <div className="items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-500 py-4 gap-x-4 flex px-6">
                 <span className="block float-left text-3xl">
                     <CgProfile />
                 </span>
