@@ -13,7 +13,7 @@ const indikatorKecAngin = ({ wind }: { wind: number }) => {
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
             <div className="absolute inset-0 flex items-center justify-end z-0">
-                <Angin className={`${bgIcon} w-1/3 mr-2`} />
+                <Angin className={`${bgIcon} w-1/3`} />
             </div>
             <div className='relative z-10'>
                 <h5 className="mb-3">Angin</h5>
