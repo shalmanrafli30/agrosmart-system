@@ -11,23 +11,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Mengatur state untuk sidebar open/close
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activePage, setActivePage] = useState("Dashboard"); // Track active page
+  const [activePage, setActivePage] = useState("Dashboard");
 
   return (
     <html lang="en">
       <body className="font-roboto">
         <div className="flex">
-          {/* Sidebar menerima prop untuk state open/close dan active page */}
           <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={activePage} setActivePage={setActivePage} />
 
           <div className={`${sidebarOpen ? "ml-72" : "ml-20"} flex-grow transition-all duration-300`}>
-            {/* Header dan dropdown */}
             <Header title="Dashboard" />
             <Site />
-
-            {/* Konten anak-anak */}
             {children}
           </div>
         </div>
