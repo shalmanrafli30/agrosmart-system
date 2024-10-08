@@ -16,7 +16,7 @@ const indikatorSuhu = ({ suhu }: { suhu: number }) => {
             <div className="absolute inset-0 flex items-center justify-end z-0">
                 <Temp className={`${bgIcon} w-1/4 mr-2`} />
             </div>
-            <div className='relative z-10'> {/* Pastikan z-index untuk konten diatur lebih tinggi */}
+            <div className='relative z-10'>
                 <h5 className="mb-3">Suhu</h5>
                 <span className="font-bold text-4xl">{suhu} °C</span>
             </div>
