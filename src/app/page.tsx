@@ -5,6 +5,7 @@ import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 import IndikatorHujan from "./Components/indikator/indikatorHujan";
+import Tugas from "./Components/warning/tugas";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -17,6 +18,13 @@ export const indikator = [
   {wind: 14},
   {lux: 40},
   {rain: 50}
+]
+
+export const Tasks = [
+  {
+    title: "Pemupukan Lanjut",
+    date: new Date("2024-11-20")
+  }
 ]
 
 export default function HomePage() {
@@ -62,34 +70,34 @@ export default function HomePage() {
       
       <div className="flex gap-2 mt-2">
         {/* Indikator */}
-        <div className="grid grid-cols-2 gap-2 flex-grow basis-3/5 max-w-full">
-          {/* Indikator 1 */}
-          <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
-          {/* Indikator 2 */}
-          <IndikatorKelembapan humid={indikator[1].humid ?? 0} />
-          {/* Indikator 3 */}
-          <IndikatorAngin wind={indikator[2].wind ?? 0} />
-          {/* Indikator 4 */}
-          <IndikatorCahaya lux={indikator[3].lux ?? 0} />
-          {/* Indikator 5 */}
-          <IndikatorHujan rain={indikator[4].rain ?? 0} />
+        <div className="flex-grow">
+          <div className="grid grid-cols-2 gap-2">
+            {/* Indikator 1 */}
+            <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
+            {/* Indikator 2 */}
+            <IndikatorKelembapan humid={indikator[1].humid ?? 0} />
+            {/* Indikator 3 */}
+            <IndikatorAngin wind={indikator[2].wind ?? 0} />
+            {/* Indikator 4 */}
+            <IndikatorCahaya lux={indikator[3].lux ?? 0} />
+            {/* Indikator 5 */}
+            <IndikatorHujan rain={indikator[4].rain ?? 0} />
+          </div>
         </div>
 
         {/* Tugas */}
-        <div className="bg-abu rounded-md p-4 basis-3/6 flex-shrink-0">
+        <div className="bg-abu rounded-md p-4 basis-3/6">
           <h5 className="font-bold text-2xl mb-5">Tugas</h5>
           {/* Tugas Content */}
           <div className="grid grid-rows-1 gap-2">
-            <div className="bg-kuningCerah w-full rounded-md p-4">
+            {/* <div className="bg-kuningCerah w-full rounded-md p-4">
               <h3 className="font-bold text-2xl mb-6">Pemupukan Lanjutan</h3>
               <span className="text-base">Waktu: <span className="text-lg font-bold">27-09-2024 (2 Hari Lagi)</span></span>
-            </div>
+            </div> */}
+            <Tugas title={Tasks[0].title} date={Tasks[0].date} />
           </div>
         </div>
       </div>
-
     </div>
-
-
   );
 }
