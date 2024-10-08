@@ -17,6 +17,7 @@ const config: Config = {
         warning: '#CB3A3A',
         warningSecondary: '#B92E2E',
         abu: '#F7F7F7',
+        kuningCerah: '#FFD74B'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
