@@ -13,6 +13,9 @@ const config: Config = {
         foreground: "var(--foreground)",
         darkCustom: '#1F293A',
         primary: '#3ACBB6',
+        secondary: '#2EB9A6',
+        warning: '#CB3A3A',
+        warningSecondary: '#B92E2E',
         abu: '#F7F7F7',
       },
       fontFamily: {
