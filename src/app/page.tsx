@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { useState } from "react";
-import IndikatorSuhu from "./Components/indikatorSuhu";
+import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
 
 export const metadata: Metadata = {
   title: "Dashboard",
