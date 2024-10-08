@@ -73,7 +73,10 @@ export default function HomePage() {
           {/* Indikator 5 */}
           <IndikatorHujan rain={indikator[4].rain ?? 0} />
         </div>
-        <div className="bg-abu flex-grow-[2]"></div>
+        {/* Tugas */}
+        <div className="bg-abu flex-grow-[2] rounded-md">
+
+        </div>
       </div>
     </div>
 
