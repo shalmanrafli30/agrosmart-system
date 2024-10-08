@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
     ];
 
     return (
-        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-300 flex flex-col fixed top-0 left-0`}>
+        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-500 flex flex-col fixed top-0 left-0`}>
             <div className="px-6">
                 {open ? (
                     <Silang className="w-6 py-6 text-white cursor-pointer" onClick={() => setOpen(!open)} />
