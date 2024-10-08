@@ -1,25 +1,28 @@
-import { useState } from "react";
-import Garis from "../assets/3Garis.svg";
-import Silang from "../assets/Silang.svg";
 import { MdDashboard } from "react-icons/md";
 import { AiFillDashboard } from "react-icons/ai";
 import { Ri24HoursLine } from "react-icons/ri";
 import { PiMapPinAreaFill } from "react-icons/pi";
 import { MdOutlineSensors } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
+import Garis from "../assets/3Garis.svg";
+import Silang from "../assets/Silang.svg";
 
-export default function Sidebar() {
-    const [open, setOpen] = useState(false);
+interface SidebarProps {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     const Menus = [
         { title: "Dashboard", icon: <MdDashboard /> },
-        { title: "Realtime", icon: <AiFillDashboard />, spacing: "true" },
+        { title: "Realtime", icon: <AiFillDashboard />, spacing: true },
         { title: "Riwayat", icon: <Ri24HoursLine /> },
-        { title: "Area", icon: <PiMapPinAreaFill />, spacing: "true" },
+        { title: "Area", icon: <PiMapPinAreaFill />, spacing: true },
         { title: "Sensor", icon: <MdOutlineSensors /> },
     ];
 
     return (
-        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-300 flex flex-col`}>
+        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-300 flex flex-col fixed top-0 left-0`}>
             <div className="px-6">
                 {open ? (
                     <Silang className="w-6 py-6 text-white cursor-pointer" onClick={() => setOpen(!open)} />
@@ -51,4 +54,6 @@ export default function Sidebar() {
             </div>
         </div>
     );
-}
+};
+
+export default Sidebar;
