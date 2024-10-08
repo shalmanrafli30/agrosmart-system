@@ -4,6 +4,7 @@ import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
 import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
+import IndikatorHujan from "./Components/indikator/indikatorHujan";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -14,7 +15,8 @@ export const indikator = [
   {suhu: 29},
   {humid: 30},
   {wind: 14},
-  {lux: 40}
+  {lux: 40},
+  {rain: 50}
 ]
 
 export default function HomePage() {
@@ -68,7 +70,8 @@ export default function HomePage() {
           <IndikatorAngin wind={indikator[2].wind ?? 0} />
           {/* Indikator 4 */}
           <IndikatorCahaya lux={indikator[3].lux ?? 0} />
-
+          {/* Indikator 5 */}
+          <IndikatorHujan rain={indikator[4].rain ?? 0} />
         </div>
         <div className="bg-abu flex-grow-[2]"></div>
       </div>
