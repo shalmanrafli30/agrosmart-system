@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { useState } from "react";
 import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
+import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 export const indikator = [
-  {suhu: 19},
+  {suhu: 29},
+  {humid: 30}
 ]
 
 export default function HomePage() {
@@ -55,9 +57,9 @@ export default function HomePage() {
       <div className="flex gap-2 mt-2">
         <div className="grid grid-cols-2 gap-2 flex-grow">
           {/* Indikator 1 */}
-          <IndikatorSuhu suhu={indikator[0].suhu}/>
+          <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
           {/* Indikator 2 */}
-          <IndikatorSuhu suhu={indikator[0].suhu}/>
+          <IndikatorKelembapan humid={indikator[1].humid ?? 0} />
         </div>
         <div className="bg-abu flex-grow-[2]"></div>
       </div>
