@@ -17,7 +17,7 @@ const indikatorKelembapan = ({ humid }: { humid: number }) => {
             </div>
             <div className='relative z-10'>
                 <h5 className="mb-3">Kelembapan</h5>
-                <span className="font-bold text-4xl">{humid} °C</span>
+                <span className="font-bold text-4xl">{humid} %H</span>
             </div>
         </div>
     )
