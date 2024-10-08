@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
     ];
 
     return (
-        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-500 flex flex-col fixed top-0 left-0`}>
+        <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-300 flex flex-col fixed top-0 left-0`}>
             <div className="px-6">
                 {open ? (
                     <Silang className="w-6 py-6 text-white cursor-pointer" onClick={() => setOpen(!open)} />
@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
                     {Menus.map((menu, index) => (
                         <li 
                             key={index} 
-                            className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-500 py-2 px-6 gap-x-4 flex ${menu.spacing ? "mt-10" : "mt-3"}`} 
+                            className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-300 py-2 px-6 gap-x-4 flex ${menu.spacing ? "mt-10" : "mt-3"}`} 
                             onClick={() => setActivePage(menu.title)}
                         >
                             <span 
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
 
             {/* PROFILE */}
             <div 
-                className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-500 py-4 gap-x-4 flex px-6 ${activePage === "Profil" ? "text-primary" : ""}`} // Change color for active profile
+                className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-300 py-4 gap-x-4 flex px-6 ${activePage === "Profil" ? "text-primary" : ""}`} // Change color for active profile
                 onClick={() => setActivePage("Profil")} // Set active page for profile
             >
                 <span className={`block float-left text-3xl ${activePage === "Profil" ? "text-primary" : ""}`}>
