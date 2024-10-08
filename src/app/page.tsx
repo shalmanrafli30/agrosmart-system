@@ -59,9 +59,10 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      {/* Indikator */}
+      
       <div className="flex gap-2 mt-2">
-        <div className="grid grid-cols-2 gap-2 flex-grow">
+        {/* Indikator */}
+        <div className="grid grid-cols-2 gap-2 flex-grow basis-3/5 max-w-full">
           {/* Indikator 1 */}
           <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
           {/* Indikator 2 */}
@@ -73,11 +74,20 @@ export default function HomePage() {
           {/* Indikator 5 */}
           <IndikatorHujan rain={indikator[4].rain ?? 0} />
         </div>
-        {/* Tugas */}
-        <div className="bg-abu flex-grow-[2] rounded-md">
 
+        {/* Tugas */}
+        <div className="bg-abu rounded-md p-4 basis-3/6 flex-shrink-0">
+          <h5 className="font-bold text-2xl mb-5">Tugas</h5>
+          {/* Tugas Content */}
+          <div className="grid grid-rows-1 gap-2">
+            <div className="bg-kuningCerah w-full rounded-md p-4">
+              <h3 className="font-bold text-2xl mb-6">Pemupukan Lanjutan</h3>
+              <span className="text-base">Waktu: <span className="text-lg font-bold">27-09-2024 (2 Hari Lagi)</span></span>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
 
 
