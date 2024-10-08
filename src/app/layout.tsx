@@ -1,5 +1,4 @@
-'use client'  // Menandakan komponen ini harus dirender di client
-
+'use client'
 import "./globals.css";
 import Header from "./Components/header";
 import Sidebar from "./Components/sidebar";
@@ -21,7 +20,7 @@ export default function RootLayout({
           <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activePage={activePage} setActivePage={setActivePage} />
 
           <div className={`${sidebarOpen ? "ml-72" : "ml-20"} flex-grow transition-all duration-300`}>
-            <Header title="Dashboard" />
+            <Header title={activePage} />
             <Site />
             {children}
           </div>
