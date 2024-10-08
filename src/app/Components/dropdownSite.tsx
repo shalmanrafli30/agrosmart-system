@@ -1,7 +1,4 @@
-import React, { useState } from 'react'
-
 const dropdownSite = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const Sites = [
     { title: 'SITE001 - Lahan Padi' },
     { title: 'SITE002 - Lahan Padi' }
