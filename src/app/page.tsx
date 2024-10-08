@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { useState } from "react";
 import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
 import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
+import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
+import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -10,7 +12,9 @@ export const metadata: Metadata = {
 
 export const indikator = [
   {suhu: 29},
-  {humid: 30}
+  {humid: 30},
+  {wind: 14},
+  {lux: 40}
 ]
 
 export default function HomePage() {
@@ -60,6 +64,11 @@ export default function HomePage() {
           <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
           {/* Indikator 2 */}
           <IndikatorKelembapan humid={indikator[1].humid ?? 0} />
+          {/* Indikator 3 */}
+          <IndikatorAngin wind={indikator[2].wind ?? 0} />
+          {/* Indikator 4 */}
+          <IndikatorCahaya lux={indikator[3].lux ?? 0} />
+
         </div>
         <div className="bg-abu flex-grow-[2]"></div>
       </div>
