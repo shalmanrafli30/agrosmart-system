@@ -1,5 +1,5 @@
 import React from 'react';
-import Temp from "../assets/suhu.svg";
+import Temp from "../../assets/suhu.svg";
 
 const indikatorSuhu = ({ suhu }: { suhu: number }) => {
     // Tentukan kelas latar belakang berdasarkan suhu
