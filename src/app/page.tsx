@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { useState } from "react";
 import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
 import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
@@ -13,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export const indikator = [
-  {suhu: 29},
+  {suhu: 40},
   {humid: 30},
   {wind: 14},
   {lux: 40},
@@ -33,7 +32,6 @@ export default function HomePage() {
       <div className="flex gap-2">
         <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl w-1/2"></div>
         <div className="flex-grow">
-          {/* All sections wrapped in a single column container with gap */}
           <div className="flex flex-col gap-y-2">
             {/* Tanaman & Umur Tanam - SECTION 1 */}
             <div className="grid grid-cols-2 gap-2">
@@ -90,10 +88,6 @@ export default function HomePage() {
           <h5 className="font-bold text-2xl mb-5">Tugas</h5>
           {/* Tugas Content */}
           <div className="grid grid-rows-1 gap-2">
-            {/* <div className="bg-kuningCerah w-full rounded-md p-4">
-              <h3 className="font-bold text-2xl mb-6">Pemupukan Lanjutan</h3>
-              <span className="text-base">Waktu: <span className="text-lg font-bold">27-09-2024 (2 Hari Lagi)</span></span>
-            </div> */}
             <Tugas title={Tasks[0].title} date={Tasks[0].date} />
           </div>
         </div>
