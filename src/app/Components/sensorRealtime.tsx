@@ -5,6 +5,9 @@ import IndikatorNitrogen from './indikator/indikatorNitrogen';
 import IndikatorFosfor from './indikator/indikatorFosfor';
 import IndikatorKalium from './indikator/indikatorKalium';
 import IndikatorPh from './indikator/indikatorPh';
+import IndikatorEc from './indikator/indikatorEC';
+import IndikatorTds from './indikator/indikatorTDS';
+
 
 interface SensorRealtimeProps {
     suhu: number;
@@ -13,9 +16,11 @@ interface SensorRealtimeProps {
     fosfor: number;
     kalium: number;
     ph: number;
+    ec: number;
+    tds: number;
 }
 
-const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, fosfor, kalium, ph }) => {
+const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, fosfor, kalium, ph, ec, tds }) => {
     return (
         <div className="mt-5">
             <h3 className="font-bold text-2xl mb-5">Sensor 1</h3>
@@ -27,8 +32,8 @@ const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, 
                 <IndikatorFosfor fosfor={fosfor} batasAtas={50} batasBawah={20}/>
                 <IndikatorKalium kalium={kalium} batasAtas={50} batasBawah={20}/>
                 <IndikatorPh ph={ph} batasAtas={7} batasBawah={3}/>
-                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
-                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorEc ec={ec} batasAtas={50} batasBawah={20}/>
+                <IndikatorTds tds={tds} batasAtas={50} batasBawah={20}/>
             </div>
         </div>
     );
