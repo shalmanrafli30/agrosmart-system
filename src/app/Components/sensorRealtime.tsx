@@ -3,15 +3,17 @@ import IndikatorSuhu from './indikator/indikatorSuhu';
 import IndikatorKelembapan from './indikator/indikatorKelembapan';
 import IndikatorNitrogen from './indikator/indikatorNitrogen';
 import IndikatorFosfor from './indikator/indikatorFosfor';
+import IndikatorKalium from './indikator/indikatorKalium';
 
 interface SensorRealtimeProps {
     suhu: number;
     humid: number;
     nitrogen: number;
     fosfor: number;
+    kalium: number;
 }
 
-const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, fosfor }) => {
+const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, fosfor, kalium }) => {
     return (
         <div className="mt-5">
             <h3 className="font-bold text-2xl mb-5">Sensor 1</h3>
@@ -21,7 +23,7 @@ const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen, 
                 <IndikatorKelembapan humid={humid} batasAtas={50} batasBawah={20}/>
                 <IndikatorNitrogen nitrogen={nitrogen} batasAtas={40} batasBawah={20} />
                 <IndikatorFosfor fosfor={fosfor} batasAtas={50} batasBawah={20}/>
-                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorKalium kalium={kalium} batasAtas={50} batasBawah={20}/>
                 <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
                 <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
                 <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
