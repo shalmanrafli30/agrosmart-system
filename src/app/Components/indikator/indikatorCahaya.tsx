@@ -1,13 +1,19 @@
 import React from 'react'
 import Cahaya from "../../assets/Cahaya.svg";
 
-const indikatorCahaya = ({ lux }: { lux: number }) => {
+interface indikatorCahayaProps {
+    lux: number;
+    batasAtas: number;
+    batasBawah: number;
+}
+
+const indikatorCahaya: React.FC<indikatorCahayaProps> = ({ lux, batasAtas, batasBawah}) => {
     const bgColor = 
-        lux > 50 || lux < 10 ? 'bg-warning' : 
+        lux > batasAtas || lux < batasBawah ? 'bg-warning' : 
         'bg-primary';
 
     const bgIcon =
-        lux > 50 || lux < 10 ? 'text-warningSecondary' : 
+        lux > batasAtas || lux < batasBawah ? 'text-warningSecondary' : 
         'text-secondary';
 
     return (

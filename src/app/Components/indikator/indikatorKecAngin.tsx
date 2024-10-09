@@ -1,13 +1,19 @@
-import React from 'react'
-import Angin from "../../assets/Angin.svg";
+import React from 'react';
+import Angin from '../../assets/Angin.svg';
 
-const indikatorKecAngin = ({ wind }: { wind: number }) => {
+interface indikatorKecAnginProps {
+    wind: number;
+    batasAtas: number;
+    batasBawah: number;
+}
+
+const indikatorKecAngin: React.FC<indikatorKecAnginProps> = ({ wind, batasAtas, batasBawah }) => {
     const bgColor = 
-        wind > 15 || wind < 1 ? 'bg-warning' : 
+        wind > batasAtas || wind < batasBawah ? 'bg-warning' : 
         'bg-primary';
 
     const bgIcon =
-        wind > 15 || wind < 1 ? 'text-warningSecondary' : 
+        wind > batasAtas || wind < batasBawah ? 'text-warningSecondary' : 
         'text-secondary';
 
     return (
@@ -20,7 +26,7 @@ const indikatorKecAngin = ({ wind }: { wind: number }) => {
                 <span className="font-bold text-4xl">{wind} m/s</span>
             </div>
         </div>
-    )
+    );
 }
 
-export default indikatorKecAngin
+export default indikatorKecAngin;

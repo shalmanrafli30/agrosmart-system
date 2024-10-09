@@ -15,14 +15,14 @@ const SensorRealtime: React.FC<SensorRealtimeProps> = ({ suhu, humid, nitrogen }
             <h3 className="font-bold text-2xl mb-5">Sensor 1</h3>
             <div className="bg-abu w-full rounded-md grid grid-cols-4 gap-2 p-4">
                 {/* THE CONTENT IS HERE */}
-                <IndikatorSuhu suhu={suhu} />
-                <IndikatorKelembapan humid={humid} />
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorKelembapan humid={humid} batasAtas={50} batasBawah={20}/>
                 <IndikatorNitrogen nitrogen={nitrogen} batasAtas={40} batasBawah={20} />
-                <IndikatorSuhu suhu={suhu} />
-                <IndikatorSuhu suhu={suhu} />
-                <IndikatorSuhu suhu={suhu} />
-                <IndikatorSuhu suhu={suhu} />
-                <IndikatorSuhu suhu={suhu} />
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
+                <IndikatorSuhu suhu={suhu} batasAtas={50} batasBawah={20}/>
             </div>
         </div>
     );

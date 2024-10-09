@@ -1,14 +1,19 @@
 import React from 'react';
-import Temp from "../../assets/suhu.svg";
+import Temp from '../../assets/suhu.svg';
 
-const indikatorSuhu = ({ suhu }: { suhu: number }) => {
-    // Tentukan kelas latar belakang berdasarkan suhu
+interface indikatorSuhuProps {
+    suhu: number;
+    batasAtas: number;
+    batasBawah: number;
+}
+
+const indikatorSuhu: React.FC<indikatorSuhuProps> = ({ suhu, batasAtas, batasBawah }) => {
     const bgColor = 
-        suhu > 30 || suhu < 20 ? 'bg-warning' : 
+        suhu > batasAtas || suhu < batasBawah ? 'bg-warning' : 
         'bg-primary';
 
     const bgIcon =
-        suhu > 30 || suhu < 20 ? 'text-warningSecondary' : 
+        suhu > batasAtas || suhu < batasBawah ? 'text-warningSecondary' : 
         'text-secondary';
 
     return (

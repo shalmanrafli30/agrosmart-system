@@ -1,15 +1,21 @@
-import React from 'react'
+import React from 'react';
 import Hujan from '../../assets/Hujan.svg';
 
+interface indikatorHujanProps {
+    rain: number;
+    batasAtas: number;
+    batasBawah: number;
+}
 
-const indikatorHujan = ({ rain }: { rain: number }) => {
+const indikatorHujan: React.FC<indikatorHujanProps> = ({ rain, batasAtas, batasBawah }) => {
     const bgColor = 
-        rain > 100 || rain < 50 ? 'bg-warning' : 
+        rain > batasAtas || rain < batasBawah ? 'bg-warning' : 
         'bg-primary';
 
     const bgIcon =
-        rain > 100 || rain < 50 ? 'text-warningSecondary' : 
+        rain > batasAtas || rain < batasBawah ? 'text-warningSecondary' : 
         'text-secondary';
+
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
             <div className="absolute inset-0 flex items-center justify-end z-0">
@@ -20,7 +26,7 @@ const indikatorHujan = ({ rain }: { rain: number }) => {
                 <span className="font-bold text-4xl">{rain} mm</span>
             </div>
         </div>
-    )
+    );
 }
 
-export default indikatorHujan
+export default indikatorHujan;

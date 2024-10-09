@@ -71,15 +71,15 @@ export default function HomePage() {
         <div className="flex-grow">
           <div className="grid grid-cols-2 gap-2">
             {/* Indikator 1 */}
-            <IndikatorSuhu suhu={indikator[0].suhu ?? 0} />
+            <IndikatorSuhu suhu={indikator[0].suhu ?? 0} batasAtas={50} batasBawah={20}/>
             {/* Indikator 2 */}
-            <IndikatorKelembapan humid={indikator[1].humid ?? 0} />
+            <IndikatorKelembapan humid={indikator[1].humid ?? 0} batasAtas={50} batasBawah={20}/>
             {/* Indikator 3 */}
-            <IndikatorAngin wind={indikator[2].wind ?? 0} />
+            <IndikatorAngin wind={indikator[2].wind ?? 0} batasAtas={50} batasBawah={20}/>
             {/* Indikator 4 */}
-            <IndikatorCahaya lux={indikator[3].lux ?? 0} />
+            <IndikatorCahaya lux={indikator[3].lux ?? 0} batasAtas={50} batasBawah={20}/>
             {/* Indikator 5 */}
-            <IndikatorHujan rain={indikator[4].rain ?? 0} />
+            <IndikatorHujan rain={indikator[4].rain ?? 0} batasAtas={50} batasBawah={20}/>
           </div>
         </div>
 

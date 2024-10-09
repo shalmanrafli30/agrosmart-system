@@ -1,13 +1,19 @@
-import React from 'react'
-import Humidity from "../../assets/Humidity.svg";
+import React from 'react';
+import Humidity from '../../assets/Humidity.svg';
 
-const indikatorKelembapan = ({ humid }: { humid: number }) => {
+interface indikatorKelembapanProps {
+    humid: number;
+    batasAtas: number;
+    batasBawah: number;
+}
+
+const indikatorKelembapan: React.FC<indikatorKelembapanProps> = ({ humid, batasAtas, batasBawah }) => {
     const bgColor = 
-        humid > 60 || humid < 30 ? 'bg-warning' : 
+        humid > batasAtas || humid < batasBawah ? 'bg-warning' : 
         'bg-primary';
 
     const bgIcon =
-        humid > 60 || humid < 30 ? 'text-warningSecondary' : 
+        humid > batasAtas || humid < batasBawah ? 'text-warningSecondary' : 
         'text-secondary';
 
     return (
@@ -20,7 +26,7 @@ const indikatorKelembapan = ({ humid }: { humid: number }) => {
                 <span className="font-bold text-4xl">{humid} %H</span>
             </div>
         </div>
-    )
+    );
 }
 
-export default indikatorKelembapan
+export default indikatorKelembapan;
