@@ -24,7 +24,7 @@ const indikatorEc: React.FC<indikatorEcProps> = ({ec, batasAtas, batasBawah}) =>
             </div> */}
             <div className='relative z-10'>
                 <h5 className="mb-3">EC</h5>
-                <span className="font-bold text-4xl">{ec}</span>
+                <span className="font-bold text-4xl">{ec} dS/m</span>
             </div>
         </div>
     )
