@@ -1,5 +1,5 @@
 import React from 'react'
-// import Kalium from '../../assets/K.svg';
+import EC from '../../assets/EC.svg';
 
 interface indikatorEcProps {
     ec: number;
@@ -19,9 +19,9 @@ const indikatorEc: React.FC<indikatorEcProps> = ({ec, batasAtas, batasBawah}) =>
 
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
-            {/* <div className="absolute inset-0 flex items-center justify-end z-0">
-                <Kalium className={`${bgIcon} w-1/4`} />
-            </div> */}
+            <div className="absolute inset-0 flex items-center justify-end z-0">
+                <EC className={`${bgIcon} w-2/5`} />
+            </div>
             <div className='relative z-10'>
                 <h5 className="mb-3">EC</h5>
                 <span className="font-bold text-4xl">{ec} dS/m</span>
