@@ -16,10 +16,12 @@ const Tugas: React.FC<TugasProps> = ({ title, date }) => {
 
     return (
         <div className="bg-kuningCerah w-full rounded-md p-4">
-        <h3 className="font-bold text-2xl mb-6">{title}</h3>
-        <span className="text-base">
-            Waktu: <span className="text-lg font-bold">{formattedDate} ({daysLeft > 0 ? daysLeft : 0} Hari Lagi)</span>
-        </span>
+            <h3 className="font-bold text-2xl mb-6">{title}</h3>
+            <span className="text-base"> Waktu: 
+                <span className="text-lg font-bold">
+                    {formattedDate} ({daysLeft > 0 ? daysLeft : 0} Hari Lagi)
+                </span>
+            </span>
         </div>
     );
 };
