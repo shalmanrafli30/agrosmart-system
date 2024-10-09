@@ -12,7 +12,7 @@ export default function Realtime() {
             <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl">
 
             </div>
-            <SensorRealtime suhu={19} humid={30} />
+            <SensorRealtime suhu={19} humid={30} nitrogen={30}/>
         </div>
     )
 }
