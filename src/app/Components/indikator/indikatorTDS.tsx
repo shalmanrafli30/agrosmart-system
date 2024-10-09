@@ -24,7 +24,7 @@ const indikatorTds: React.FC<indikatorTdsProps> = ({tds, batasAtas, batasBawah})
             </div> */}
             <div className='relative z-10'>
                 <h5 className="mb-3">TDS</h5>
-                <span className="font-bold text-4xl">{tds}</span>
+                <span className="font-bold text-4xl">{tds} ppm</span>
             </div>
         </div>
     )
