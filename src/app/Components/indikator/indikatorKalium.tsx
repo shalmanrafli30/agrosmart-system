@@ -24,7 +24,7 @@ const indikatorKalium: React.FC<indikatorKaliumProps> = ({kalium, batasAtas, bat
             </div>
             <div className='relative z-10'>
                 <h5 className="mb-3">Kalium</h5>
-                <span className="font-bold text-4xl">{kalium} N</span>
+                <span className="font-bold text-4xl">{kalium} K</span>
             </div>
         </div>
     )
