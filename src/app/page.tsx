@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import type { Metadata } from "next";
 import IndikatorSuhu from "./Components/indikator/indikatorSuhu";
 import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
@@ -5,6 +6,7 @@ import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 import IndikatorHujan from "./Components/indikator/indikatorHujan";
 import Tugas from "./Components/warning/tugas";
+import FloatingGallery from "./Components/GalleryModal"; // Import the FloatingGallery component
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -12,27 +14,31 @@ export const metadata: Metadata = {
 };
 
 export const indikator = [
-  {suhu: 40},
-  {humid: 30},
-  {wind: 14},
-  {lux: 40},
-  {rain: 50}
-]
+  { suhu: 40 },
+  { humid: 30 },
+  { wind: 14 },
+  { lux: 40 },
+  { rain: 50 }
+];
 
 export const Tasks = [
   {
     title: "Pemupukan Lanjut",
     date: new Date("2024-11-20")
   }
-]
+];
 
 export default function HomePage() {
   return (
     <div className="p-6">
       <div className="flex gap-2">
-        <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl w-1/2 overflow-hidden">
-          <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/>
+        {/* ILUSTRASI LAHAN */}
+        <div className="bg-gray-600 h-[500px] rounded-xl w-3/4 overflow-hidden relative">
+          <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full" />
+          <FloatingGallery /> {/* Use the FloatingGallery component here */}
         </div>
+
+        {/* INFO LAHAN */}
         <div className="flex-grow">
           <div className="flex flex-col gap-y-2">
             {/* Tanaman & Umur Tanam - SECTION 1 */}
@@ -52,13 +58,13 @@ export default function HomePage() {
               <h5 className="mb-5 font-medium">Tanggal Tanam</h5>
               <span className="font-bold text-xl">2024-08-08 07:00:00</span>
             </div>
-            
+
             {/* Fase Tanam - SECTION 3 */}
             <div className="bg-abu p-2 rounded-md">
               <h5 className="mb-5 font-medium">Fase Tanam</h5>
               <span className="font-bold text-xl">Fase 4</span>
             </div>
-            
+
             {/* Waktu Panen - SECTION 4 */}
             <div className="bg-primary p-2 rounded-md text-white">
               <h5 className="mb-7 font-medium">Waktu Menuju Panen</h5>
@@ -67,21 +73,20 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
       <div className="flex gap-2 mt-2">
         {/* Indikator */}
         <div className="flex-grow">
           <div className="grid grid-cols-2 gap-2">
             {/* Indikator 1 */}
-            <IndikatorSuhu suhu={indikator[0].suhu ?? 0} batasAtas={50} batasBawah={20}/>
+            <IndikatorSuhu suhu={indikator[0].suhu ?? 0} batasAtas={50} batasBawah={20} />
             {/* Indikator 2 */}
-            <IndikatorKelembapan humid={indikator[1].humid ?? 0} batasAtas={50} batasBawah={20}/>
+            <IndikatorKelembapan humid={indikator[1].humid ?? 0} batasAtas={50} batasBawah={20} />
             {/* Indikator 3 */}
-            <IndikatorAngin wind={indikator[2].wind ?? 0} batasAtas={50} batasBawah={20}/>
+            <IndikatorAngin wind={indikator[2].wind ?? 0} batasAtas={50} batasBawah={20} />
             {/* Indikator 4 */}
-            <IndikatorCahaya lux={indikator[3].lux ?? 0} batasAtas={50} batasBawah={20}/>
+            <IndikatorCahaya lux={indikator[3].lux ?? 0} batasAtas={50} batasBawah={20} />
             {/* Indikator 5 */}
-            <IndikatorHujan rain={indikator[4].rain ?? 0} batasAtas={50} batasBawah={20}/>
+            <IndikatorHujan rain={indikator[4].rain ?? 0} batasAtas={50} batasBawah={20} />
           </div>
         </div>
 
