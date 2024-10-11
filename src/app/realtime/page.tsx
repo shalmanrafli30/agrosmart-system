@@ -68,8 +68,8 @@ export const data = [
 export default function Realtime() {
     return (
         <div className="p-6">
-            <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl">
-                {/* You can add more UI elements here if needed */}
+            <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl overflow-hidden">
+                <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/>
             </div>
             {data.map((sensorData) => (
                 <SensorRealtime 

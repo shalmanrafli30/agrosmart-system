@@ -30,7 +30,9 @@ export default function HomePage() {
   return (
     <div className="p-6">
       <div className="flex gap-2">
-        <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl w-1/2"></div>
+        <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl w-1/2 overflow-hidden">
+          <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/>
+        </div>
         <div className="flex-grow">
           <div className="flex flex-col gap-y-2">
             {/* Tanaman & Umur Tanam - SECTION 1 */}
