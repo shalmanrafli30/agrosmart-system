@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SensorRealtime from "../Components/sensorRealtime";
+import Site from "../Components/dropdownSite";
 
 export const metadata: Metadata = {
     title: "Realtime",
@@ -68,6 +69,7 @@ export const data = [
 export default function Realtime() {
     return (
         <div className="p-6">
+            <Site />
             <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl overflow-hidden">
                 <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/>
             </div>
