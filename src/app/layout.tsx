@@ -27,6 +27,9 @@ export default function RootLayout({
       case "/area":
         setActivePage("Area");
         break;
+      case "/area/tambah-area":
+        setActivePage("Area");
+        break;
       case "/sensor":
         setActivePage("Sensor");
         break;
