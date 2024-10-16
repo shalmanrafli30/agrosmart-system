@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import AddSensor from '../Components/AddButton';
 import EditArea from '../Components/editData';
-import Edit from '../assets/Edit.svg';
 import Hapus from '../assets/Hapus.svg';
 
 export const metadata: Metadata = {

@@ -41,7 +41,7 @@ export default function page() {
                     </div>
                     <div id="aksi" className="space-x-5 mt-6">
                         <Back route="/area"/>
-                        <input type="submit" value="Tambah" className="bg-primary text-white rounded-md p-3 cursor-pointer hover:bg-secondary"/>
+                        <input type="submit" value="Simpan" className="bg-[#F9B300] text-white rounded-md p-3 cursor-pointer hover:bg-kuningCerah"/>
                     </div>
                 </form>
             </div>
