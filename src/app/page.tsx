@@ -5,6 +5,7 @@ import IndikatorKelembapan from "./Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "./Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 import IndikatorHujan from "./Components/indikator/indikatorHujan";
+import Map from "./Components/map";
 import Tugas from "./Components/warning/tugas";
 import FloatingGallery from "./Components/GalleryModal"; // Import the FloatingGallery component
 import Site from "./Components/dropdownSite";
@@ -39,7 +40,8 @@ export default function HomePage() {
       <div className="flex gap-2">
         {/* ILUSTRASI LAHAN */}
         <div className="bg-gray-600 h-[500px] rounded-xl w-3/4 overflow-hidden relative">
-          <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full" />
+          {/* <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full" /> */}
+          <Map />
           <FloatingGallery /> {/* Use the FloatingGallery component here */}
         </div>
 
