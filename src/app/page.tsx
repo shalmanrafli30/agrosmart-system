@@ -7,6 +7,7 @@ import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 import IndikatorHujan from "./Components/indikator/indikatorHujan";
 import Map from "./Components/map";
 import Tugas from "./Components/warning/tugas";
+import Warning from "./Components/warning/anomali";
 import FloatingGallery from "./Components/GalleryModal"; // Import the FloatingGallery component
 import Site from "./Components/dropdownSite";
 
@@ -103,6 +104,7 @@ export default function HomePage() {
           {/* Tugas Content */}
           <div className="grid grid-rows-1 gap-2">
             <Tugas title={Tasks[0].title} date={Tasks[0].date} />
+            <Warning title="Tingkat pH Kurang" sensor="Sensor 1"/>
           </div>
         </div>
       </div>
