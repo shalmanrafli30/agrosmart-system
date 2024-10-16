@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { MdArrowBackIos } from "react-icons/md";
 import Back from '../../Components/backButton';
 
 export const metadata: Metadata = {
@@ -10,10 +9,6 @@ export const metadata: Metadata = {
 export default function page() {
     return(
         <div className="p-6">
-            {/* <div className="flex space-x-0 items-center">
-                <MdArrowBackIos className="text-2xl"/>
-                <h3 className="text-xl font-bold">Tambah Area</h3>
-            </div> */}
             {/* FORM */}
             <div className="mt-6 ml-6 bg-abu p-4">
                 <h3 className="mb-5 text-center font-bold text-xl">Tambah Area</h3>
