@@ -69,7 +69,10 @@ export const data = [
 export default function Realtime() {
     return (
         <div className="p-6">
-            <Site />
+            <div className="flex justify-between items-center w-full mb-4">
+                <Site />
+                <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
+            </div>
             <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl overflow-hidden">
                 <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/>
             </div>
