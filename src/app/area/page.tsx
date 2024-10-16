@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AddArea from '../Components/AddArea';
+import EditArea from '../Components/editData';
 import Edit from '../assets/Edit.svg';
 import Hapus from '../assets/Hapus.svg';
 
@@ -54,7 +55,8 @@ export default function page() {
                                 </td>
                                 <td className="px-6 py-4 border-r-2 border-abu3 w-2">
                                     <div className="flex space-x-2">
-                                        <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah"/>
+                                        {/* <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah"/> */}
+                                        <EditArea route="/area/edit-area"/>
                                         <Hapus className="cursor-pointer text-warningSecondary hover:text-warning"/>
                                     </div>
                                 </td>
