@@ -5,7 +5,7 @@ const dropdownSite = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div className="mb-6">
       <span>Lokasi:</span>
       <select name="site" className="bg-white font-bold">
         {Sites.map((option, index) => (

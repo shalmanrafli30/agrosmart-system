@@ -46,7 +46,7 @@ export default function RootLayout({
 
           <div className={`${sidebarOpen ? "ml-72" : "ml-20"} flex-grow transition-all duration-300`}>
             <Header title={activePage} />
-            <Site />
+            {/* <Site /> */}
             {children}
           </div>
         </div>

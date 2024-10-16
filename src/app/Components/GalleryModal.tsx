@@ -33,7 +33,7 @@ const FloatingGallery = () => {
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white rounded-xl p-4 w-[80%] h-[70%] relative">
                     <h3 className='text-center font-bold text-2xl'>Foto Lahan</h3>
-                    <button className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full" onClick={toggleGallery}>
+                    <button className="absolute top-2 right-2 p-2 bg-warning text-white rounded-full" onClick={toggleGallery}>
                         <IoMdClose />
                     </button>
                     {/* Image Slider */}

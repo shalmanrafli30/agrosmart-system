@@ -7,6 +7,7 @@ import IndikatorCahaya from "./Components/indikator/indikatorCahaya";
 import IndikatorHujan from "./Components/indikator/indikatorHujan";
 import Tugas from "./Components/warning/tugas";
 import FloatingGallery from "./Components/GalleryModal"; // Import the FloatingGallery component
+import Site from "./Components/dropdownSite";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -31,6 +32,7 @@ export const Tasks = [
 export default function HomePage() {
   return (
     <div className="p-6">
+      <Site />
       <div className="flex gap-2">
         {/* ILUSTRASI LAHAN */}
         <div className="bg-gray-600 h-[500px] rounded-xl w-3/4 overflow-hidden relative">
