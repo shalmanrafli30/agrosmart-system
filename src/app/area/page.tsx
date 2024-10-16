@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AddArea from '../Components/AddArea';
+import AddArea from '../Components/AddButton';
 import EditArea from '../Components/editData';
 import Edit from '../assets/Edit.svg';
 import Hapus from '../assets/Hapus.svg';
@@ -15,7 +15,7 @@ export default function page() {
             {/* <div className="text-end my-6">
                 <span className="bg-primary text-white p-4 rounded-md text-lg font-bold hover:bg-secondary cursor-pointer">Tambah Area</span>
             </div> */}
-            <AddArea />
+            <AddArea route="/area/tambah-area"/>
             {/* Table */}
             <div>
                 <div className="relative overflow-x-auto">
