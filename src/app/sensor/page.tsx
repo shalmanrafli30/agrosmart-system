@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function page() {
     return (
         <div className="p-6">
-            <AddSensor route="/area/tambah-sensor" title="Tambah Sensor"/>
+            <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor"/>
             {/* Table */}
             <div>
                 <div className="relative overflow-x-auto">
