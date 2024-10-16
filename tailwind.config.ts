@@ -17,6 +17,8 @@ const config: Config = {
         warning: '#CB3A3A',
         warningSecondary: '#B92E2E',
         abu: '#F7F7F7',
+        abu2: '#F8F8F9',
+        abu3: '#ECECEC',
         kuningCerah: '#FFD74B'
       },
       fontFamily: {
