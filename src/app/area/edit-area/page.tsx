@@ -3,7 +3,7 @@ import { MdArrowBackIos } from "react-icons/md";
 import Back from '../../Components/backButton';
 
 export const metadata: Metadata = {
-    title: "Tambah Area",
+    title: "Edit Area",
     description: "AgroSmartSystem Area",
 };
 
