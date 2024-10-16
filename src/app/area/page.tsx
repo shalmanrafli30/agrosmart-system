@@ -12,9 +12,6 @@ export const metadata: Metadata = {
 export default function page() {
     return (
         <div className="p-6">
-            {/* <div className="text-end my-6">
-                <span className="bg-primary text-white p-4 rounded-md text-lg font-bold hover:bg-secondary cursor-pointer">Tambah Area</span>
-            </div> */}
             <AddArea route="/area/tambah-area" title="Tambah Area"/>
             {/* Table */}
             <div>
