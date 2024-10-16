@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
 
             {/* PROFILE */}
             <div
-                className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-300 py-4 gap-x-4 flex px-6 ${activePage === "Profil" ? "text-primary" : ""}`}
+                className={`items-center cursor-pointer text-white hover:text-primary hover:bg-[#344154] duration-300 py-4 px-6 ${activePage === "Profil" ? "text-primary" : ""}`}
                 onClick={() => setActivePage("Profil")}
             >
                 <Link href="/profil" passHref>
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
                         <span className={`block float-left text-3xl ${activePage === "Profil" ? "text-primary" : ""}`}>
                             <CgProfile />
                         </span>
-                        <span className={`text-xl font-medium flex ${!open && "hidden"} ${activePage === "Profil" ? "text-primary" : ""}`}>
+                        <span className={`text-xl font-medium flex ml-4 ${!open && "hidden"} ${activePage === "Profil" ? "text-primary" : ""}`}>
                             Profil
                         </span>
                     </div>
