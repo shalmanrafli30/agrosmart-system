@@ -45,7 +45,7 @@ export default function page() {
                                     BPP SELAAWI
                                 </td>
                                 <td className="px-6 py-4 border-r-2 border-abu3">
-                                    Lingkungan
+                                    Lahan Padi
                                 </td>
                                 <td className="px-6 py-4 border-r-2 border-abu3">
                                     env

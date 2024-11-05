@@ -2,7 +2,6 @@
 import "./globals.css";
 import Header from "./Components/header";
 import Sidebar from "./Components/sidebar";
-import Site from "./Components/dropdownSite";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname from Next.js
 

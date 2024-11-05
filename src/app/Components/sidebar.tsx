@@ -17,7 +17,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActivePage }) => {
     const Menus = [
-        { title: "Dashboard", path: "/", icon: <MdDashboard /> },
+        { title: "Dashboard", path: "/dashboard", icon: <MdDashboard /> },
         { title: "Realtime", path: "/realtime", icon: <AiFillDashboard />, spacing: true },
         { title: "Riwayat", path: "/riwayat", icon: <Ri24HoursLine /> },
         { title: "Area", path: "/area", icon: <PiMapPinAreaFill />, spacing: true },
