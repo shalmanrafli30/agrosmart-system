@@ -24,7 +24,7 @@ const FloatingGallery = () => {
 
     return (
         <>
-        <div onClick={toggleGallery} className="p-2 bg-abu text-white bg-opacity-40 rounded-full absolute right-4 top-4 cursor-pointer hover:bg-primary hover:text-black duration-150">
+        <div onClick={toggleGallery} className="p-2 bg-abu text-white bg-opacity-40 rounded-full absolute right-4 top-4 cursor-pointer hover:bg-primary hover:text-black duration-150 z-20">
             <IoMdPhotos className="w-7 h-auto" />
         </div>
 
