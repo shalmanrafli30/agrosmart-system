@@ -1,97 +1,73 @@
-import type { Metadata } from "next";
+'use client';
+
+import { useEffect, useState } from "react";
 import SensorRealtime from "../Components/sensorRealtime";
 import Map from "../Components/map";
 import Site from "../Components/dropdownSite";
 
-export const metadata: Metadata = {
-    title: "Realtime",
-    description: "AgroSmartSystem Realtime",
-};
+interface SensorData {
+    ds_id: string;
+    read_value: number | string;
+    value_status: string;
+}
 
-// Dummy data
-export const data = [
-    {
-        sensor: 1,
-        suhu: 19,
-        humid: 24,
-        nitrogen: 30,
-        fosfor: 40,
-        kalium: 20,
-        ph: 7,
-        ec: 120,
-        tds: 190
-    },
-    {
-        sensor: 2,
-        suhu: 25,
-        humid: 30,
-        nitrogen: 45,
-        fosfor: 35,
-        kalium: 25,
-        ph: 6.5,
-        ec: 130,
-        tds: 200
-    },
-    {
-        sensor: 3,
-        suhu: 22,
-        humid: 28,
-        nitrogen: 40,
-        fosfor: 50,
-        kalium: 15,
-        ph: 6.8,
-        ec: 110,
-        tds: 180
-    },
-    {
-        sensor: 4,
-        suhu: 27,
-        humid: 35,
-        nitrogen: 35,
-        fosfor: 45,
-        kalium: 22,
-        ph: 7.2,
-        ec: 125,
-        tds: 210
-    },
-    {
-        sensor: 5,
-        suhu: 20,
-        humid: 32,
-        nitrogen: 38,
-        fosfor: 42,
-        kalium: 18,
-        ph: 6.7,
-        ec: 115,
-        tds: 195
-    }
-];
+interface DataResponse {
+    site_id: string;
+    nitrogen: SensorData[];
+    fosfor: SensorData[];
+    kalium: SensorData[];
+    tds: SensorData[];
+    ec: SensorData[];
+    soil_hum: SensorData[];
+    soil_ph: SensorData[];
+    soil_temp: SensorData[];
+}
 
 export default function Realtime() {
+    const [siteId, setSiteId] = useState<string>("SITE001");
+    const [data, setData] = useState<DataResponse | null>(null);
+
+    useEffect(() => {
+        if (!siteId) return;
+        fetch(`http://127.0.0.1:8000/api/realtime`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ site_id: siteId }),
+        })
+            .then((response) => response.json())
+            .then((jsonData: DataResponse) => setData(jsonData))
+            .catch((error) => console.error("Error fetching data:", error));
+    }, [siteId]);
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center w-full mb-4">
-                <Site />
+                <Site onSiteChange={(id) => setSiteId(id)} />
                 <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
             </div>
             <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl overflow-hidden">
                 <Map />
-                {/* <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-cover object-center w-full h-full"/> */}
             </div>
-            {data.map((sensorData) => (
-                <SensorRealtime 
-                    key={sensorData.sensor} // Using sensor ID as key
-                    sensor={sensorData.sensor} 
-                    suhu={sensorData.suhu} 
-                    humid={sensorData.humid} 
-                    nitrogen={sensorData.nitrogen} 
-                    fosfor={sensorData.fosfor} 
-                    kalium={sensorData.kalium} 
-                    ph={sensorData.ph} 
-                    ec={sensorData.ec} 
-                    tds={sensorData.tds} 
-                />
-            ))}
+            {data && (
+                <div>
+                    {data.soil_temp.map((sensor, index) => (
+                        <SensorRealtime
+                            key={sensor.ds_id}
+                            sensor={index + 1} // Assign sensor number dynamically
+                            suhu={Number(sensor.read_value)}
+                            humid={Number(data.soil_hum[index]?.read_value) || 0}
+                            nitrogen={Number(data.nitrogen[index]?.read_value) || 0}
+                            fosfor={Number(data.fosfor[index]?.read_value) || 0}
+                            kalium={Number(data.kalium[index]?.read_value) || 0}
+                            ph={Number(data.soil_ph[index]?.read_value) || 0}
+                            ec={Number(data.ec[index]?.read_value) || 0}
+                            tds={Number(data.tds[index]?.read_value) || 0}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

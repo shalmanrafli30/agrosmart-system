@@ -11,7 +11,7 @@ export default function page() {
     return (
         <div className="p-6">
             <div className="flex justify-between items-center w-full mb-4">
-                <Site />
+                {/* <Site /> */}
                 <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
             </div>
             <div className="mb-6 text-left">

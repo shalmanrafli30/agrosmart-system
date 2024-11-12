@@ -46,7 +46,7 @@ interface DataResponse {
 
 
 export default function HomePage() {
-  const [siteId, setSiteId] = useState<string>("");
+  const [siteId, setSiteId] = useState<string>("SITE001");
   const [data, setData] = useState<DataResponse>({
     site_id: "",
     temperature: { read_value: 0, value_status: "" },
