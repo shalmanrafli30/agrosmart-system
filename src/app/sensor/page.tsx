@@ -6,13 +6,13 @@ import Header from "../Components/header";
 
 export const metadata: Metadata = {
     title: "Sensor",
-    description: "AgroSmartSystem Area",
+    description: "AgroSmartSystem Sensor",
 };
 
 export default function page() {
     return (
         <section>
-            <Header title={'Area'}/>
+            <Header title={'Sensor'}/>
             <div className="p-6">
                 <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor"/>
                 {/* Table */}
