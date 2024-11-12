@@ -7,4 +7,5 @@ export default {
 
         return config;
     },
+    reactStrictMode: false,
 };
