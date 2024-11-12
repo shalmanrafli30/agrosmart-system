@@ -5,13 +5,13 @@ import Header from "../Components/header";
 
 // Export metadata from here
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "AgroSmartSystem Dashboard",
+  title: "Sensor",
+  description: "AgroSmartSystem Sensor",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return <RootLayout>
-    <Header title={'Dashboard'}/>
+    <Header title={'Area'}/>
       {children}
     </RootLayout>; // Use the client component here
 }
