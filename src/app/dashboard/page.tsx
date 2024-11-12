@@ -1,8 +1,6 @@
-// src/app/page.tsx
 'use client'
 
 import { useEffect, useState } from "react";
-import type { Metadata } from "next";
 import IndikatorSuhu from "../Components/indikator/indikatorSuhu";
 import IndikatorKelembapan from "../Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "../Components/indikator/indikatorKecAngin";
@@ -11,18 +9,8 @@ import IndikatorHujan from "../Components/indikator/indikatorHujan";
 import Map from "../Components/map";
 import Tugas from "../Components/warning/tugas";
 import Warning from "../Components/warning/anomali";
-import FloatingGallery from "../Components/GalleryModal"; // Import the FloatingGallery component
+import FloatingGallery from "../Components/GalleryModal";
 import Site from "../Components/dropdownSite";
-
-
-
-// export const indikator = [
-//   { suhu: 40 },
-//   { humid: 30 },
-//   { wind: 14 },
-//   { lux: 40 },
-//   { rain: 50 }
-// ];
 
 export const Tasks = [
   {
@@ -58,6 +46,7 @@ interface DataResponse {
 
 
 export default function HomePage() {
+  const [siteId, setSiteId] = useState<string>("");
   const [data, setData] = useState<DataResponse>({
     site_id: "",
     temperature: { read_value: 0, value_status: "" },
@@ -69,16 +58,23 @@ export default function HomePage() {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/dashboard2/SITE001")
+    if (!siteId) return;
+    fetch(`http://127.0.0.1:8000/api/dashboard`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ site_id: siteId }), // Send selected site ID in the request body
+    })
       .then((response) => response.json())
       .then((jsonData: DataResponse) => setData(jsonData))
       .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  }, [siteId]);
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center w-full mb-4">
-          <Site />
+        <Site onSiteChange={(id) => setSiteId(id)} />
           <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
       </div>
       <div className="flex gap-2">
