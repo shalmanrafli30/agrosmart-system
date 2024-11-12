@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return <RootLayout>
-    <Header title={'Area'}/>
+    {/* <Header title={'Area'}/> */}
       {children}
     </RootLayout>; // Use the client component here
 }
