@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import IndikatorSuhu from "../Components/indikator/indikatorSuhuEnv";
-import IndikatorKelembapan from "../Components/indikator/indikatorKelembapan";
+import IndikatorKelembapan from "../Components/indikator/indikatorKelembapanEnv";
 import IndikatorAngin from "../Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "../Components/indikator/indikatorCahaya";
 import IndikatorHujan from "../Components/indikator/indikatorHujan";
@@ -128,7 +128,7 @@ export default function HomePage() {
             {/* Indikator 1 */}
             <IndikatorSuhu suhu= {data.temperature.read_value} />
             {/* Indikator 2 */}
-            <IndikatorKelembapan humid= {data.humidity.read_value} batasAtas={50} batasBawah={20} />
+            <IndikatorKelembapan humid= {data.humidity.read_value}/>
             {/* Indikator 3 */}
             <IndikatorAngin wind= {data.wind.read_value}/>
             {/* Indikator 4 */}
