@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import IndikatorSuhu from "../Components/indikator/indikatorSuhu";
+import IndikatorSuhu from "../Components/indikator/indikatorSuhuEnv";
 import IndikatorKelembapan from "../Components/indikator/indikatorKelembapan";
 import IndikatorAngin from "../Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "../Components/indikator/indikatorCahaya";
@@ -123,17 +123,18 @@ export default function HomePage() {
       <div className="flex gap-2 mt-2">
         {/* Indikator */}
         <div className="flex-grow">
+          <h5 className="font-bold text-2xl mb-5">Indikator Lingkungan</h5>
           <div className="grid grid-cols-2 gap-2">
             {/* Indikator 1 */}
-            <IndikatorSuhu suhu= {data.temperature.read_value} batasAtas={50} batasBawah={20} />
+            <IndikatorSuhu suhu= {data.temperature.read_value} />
             {/* Indikator 2 */}
             <IndikatorKelembapan humid= {data.humidity.read_value} batasAtas={50} batasBawah={20} />
             {/* Indikator 3 */}
-            <IndikatorAngin wind= {data.wind.read_value} batasAtas={50} batasBawah={20} />
+            <IndikatorAngin wind= {data.wind.read_value}/>
             {/* Indikator 4 */}
             <IndikatorCahaya lux= {data.lux.read_value} batasAtas={50} batasBawah={20} />
             {/* Indikator 5 */}
-            <IndikatorHujan rain= {data.rain.read_value} batasAtas={50} batasBawah={20} />
+            <IndikatorHujan rain= {data.rain.read_value}/>
           </div>
         </div>
 

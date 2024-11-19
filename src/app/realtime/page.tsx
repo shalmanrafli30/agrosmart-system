@@ -27,6 +27,12 @@ export default function Realtime() {
     const [siteId, setSiteId] = useState<string>("SITE001");
     const [data, setData] = useState<DataResponse | null>(null);
 
+    const requestBody = {
+        site_id: siteId,
+    };
+
+    console.log("Request body:", requestBody);
+
     useEffect(() => {
         if (!siteId) return;
         fetch(`http://127.0.0.1:8000/api/realtime`, {
@@ -34,7 +40,7 @@ export default function Realtime() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ site_id: siteId }),
+            body: JSON.stringify(requestBody),
         })
             .then((response) => response.json())
             .then((jsonData: DataResponse) => setData(jsonData))
