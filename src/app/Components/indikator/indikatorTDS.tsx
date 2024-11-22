@@ -3,24 +3,13 @@ import TDS from '../../assets/TDS.svg';
 
 interface indikatorTdsProps {
     tds: number;
-    batasAtas: number;
-    batasBawah: number;
 }
 
-const indikatorTds: React.FC<indikatorTdsProps> = ({tds, batasAtas, batasBawah}) => {
-
-    const bgColor = 
-        tds > batasAtas || tds < batasBawah ? 'bg-warning' : 
-        'bg-primary';
-
-    const bgIcon =
-        tds > batasAtas || tds < batasBawah ? 'text-warningSecondary' : 
-        'text-secondary';
-
+const indikatorTds: React.FC<indikatorTdsProps> = ({ tds }) => {
     return (
-        <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
+        <div className={`bg-white border-2 border-[#F0F0F0] w-full h-auto p-4 text-black rounded-xl relative overflow-hidden`}>
             <div className="absolute inset-0 flex items-center justify-end z-0">
-                <TDS className={`${bgIcon} w-2/4`} />
+                <TDS className={`text-[#F0F0F0] w-2/4`} />
             </div>
             <div className='relative z-10'>
                 <h5 className="mb-3">TDS</h5>

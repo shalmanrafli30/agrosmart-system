@@ -3,18 +3,27 @@ import Temp from '../../assets/suhu.svg';
 
 interface indikatorSuhuProps {
     suhu: number;
-    batasAtas: number;
-    batasBawah: number;
+    status: string;
 }
 
-const indikatorSuhu: React.FC<indikatorSuhuProps> = ({ suhu, batasAtas, batasBawah }) => {
-    const bgColor = 
-        suhu > batasAtas || suhu < batasBawah ? 'bg-warning' : 
-        'bg-primary';
+const indikatorSuhu: React.FC<indikatorSuhuProps> = ({ suhu, status }) => {
+    const bgColor = {
+        OK: 'bg-primary',
+        Warning: 'bg-[#FFD74B]',
+        Danger: 'bg-warning',
+    }[status];
 
-    const bgIcon =
-        suhu > batasAtas || suhu < batasBawah ? 'text-warningSecondary' : 
-        'text-secondary';
+    const bgIcon = {
+        OK: 'text-secondary',
+        Warning: 'text-[#FFF0B4]',
+        Danger: 'text-warningSecondary',
+    }[status];
+
+    const textColor = {
+        OK: 'text-white',
+        Danger: 'text-white',
+        Warning: 'text-black'
+    }[status];
 
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
@@ -22,8 +31,8 @@ const indikatorSuhu: React.FC<indikatorSuhuProps> = ({ suhu, batasAtas, batasBaw
                 <Temp className={`${bgIcon} w-1/5 mr-2`} />
             </div>
             <div className='relative z-10'>
-                <h5 className="mb-3">Suhu</h5>
-                <span className="font-bold text-4xl">{suhu} °C</span>
+                <h5 className={`mb-3 ${textColor}`}>Suhu</h5>
+                <span className={`font-bold text-4xl ${textColor}`}>{suhu} °C</span>
             </div>
         </div>
     );

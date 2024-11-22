@@ -18,21 +18,26 @@ interface SensorRealtimeProps {
     ph: number;
     ec: number;
     tds: number;
+    statusPh: string;
+    statusSuhu: string;
+    statusNitrogen: string;
+    statusFosfor: string;
+    statusKalium: string;
 }
 
-const SensorRealtime: React.FC<SensorRealtimeProps> = ({ sensor, suhu, humid, nitrogen, fosfor, kalium, ph, ec, tds }) => {
+const SensorRealtime: React.FC<SensorRealtimeProps> = ({ sensor, suhu, humid, nitrogen, fosfor, kalium, ph, ec, tds, statusPh, statusSuhu, statusNitrogen, statusFosfor, statusKalium }) => {
     return (
         <div className="mt-5">
             <h3 className="font-bold text-2xl mb-5">Sensor {sensor}</h3>
             <div className="bg-abu w-full rounded-md grid grid-cols-4 gap-2 p-4">
-                <IndikatorSuhu suhu={suhu} batasAtas={30} batasBawah={20} />
-                <IndikatorKelembapan humid={humid} batasAtas={60} batasBawah={30} />
-                <IndikatorNitrogen nitrogen={nitrogen} batasAtas={40} batasBawah={20} />
-                <IndikatorFosfor fosfor={fosfor} batasAtas={30} batasBawah={15} />
-                <IndikatorKalium kalium={kalium} batasAtas={200} batasBawah={100} />
-                <IndikatorPh ph={ph} batasAtas={7} batasBawah={5} />
-                <IndikatorEc ec={ec} batasAtas={3} batasBawah={1} />
-                <IndikatorTds tds={tds} batasAtas={2000} batasBawah={500} />
+                <IndikatorSuhu suhu={suhu} status={statusSuhu} />
+                <IndikatorPh ph={ph} status={statusPh}/>
+                <IndikatorNitrogen nitrogen={nitrogen} status={statusNitrogen} />
+                <IndikatorFosfor fosfor={fosfor} status={statusFosfor} />
+                <IndikatorKalium kalium={kalium} status={statusKalium} />
+                <IndikatorKelembapan humid={humid}/>
+                <IndikatorEc ec={ec}/>
+                <IndikatorTds tds={tds}/>
             </div>
         </div>
     );

@@ -3,18 +3,27 @@ import Fosfor from "../../assets/F.svg";
 
 interface indikatorFosforProps {
     fosfor: number;
-    batasAtas: number;
-    batasBawah: number;
+    status: string;
 }
 
-const indikatorFosfor: React.FC<indikatorFosforProps> = ({ fosfor, batasAtas, batasBawah}) => {
-    const bgColor = 
-        fosfor > batasAtas || fosfor < batasBawah ? 'bg-warning' : 
-        'bg-primary';
+const indikatorFosfor: React.FC<indikatorFosforProps> = ({ fosfor, status}) => {
+    const bgColor = {
+        OK: 'bg-primary',
+        Warning: 'bg-[#FFD74B]',
+        Danger: 'bg-warning',
+    }[status];
 
-    const bgIcon =
-        fosfor > batasAtas || fosfor < batasBawah ? 'text-warningSecondary' : 
-        'text-secondary';
+    const bgIcon = {
+        OK: 'text-secondary',
+        Warning: 'text-[#FFF0B4]',
+        Danger: 'text-warningSecondary',
+    }[status];
+
+    const textColor = {
+        OK: 'text-white',
+        Danger: 'text-white',
+        Warning: 'text-black'
+    }[status];
 
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
@@ -22,8 +31,8 @@ const indikatorFosfor: React.FC<indikatorFosforProps> = ({ fosfor, batasAtas, ba
                 <Fosfor className={`${bgIcon} w-1/4`} />
             </div>
             <div className='relative z-10'>
-                <h5 className="mb-3">Fosfor</h5>
-                <span className="font-bold text-4xl">{fosfor} P</span>
+                <h5 className={`mb-3 ${textColor}`}>Fosfor</h5>
+                <span className={`font-bold text-4xl ${textColor}`}>{fosfor} P</span>
             </div>
         </div>
     )

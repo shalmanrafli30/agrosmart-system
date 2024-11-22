@@ -6,7 +6,7 @@ interface DropdownSiteProps {
 
 const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
   const Sites = [
-      { id: "SITE001", title: "SITE001 - Lahan Padi" },
+      { id: "SITE001", title: "Poktan Pasir Malang, Desa Langensari, Kecamapatan Karangtengah, Kab. Cianjur" },
       // { id: "SITE002", title: "SITE002 - Lahan Padi" },
   ];
 

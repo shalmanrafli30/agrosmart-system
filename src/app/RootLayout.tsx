@@ -26,11 +26,21 @@ export default function RootLayout({
         setActivePage("Riwayat");
         break;
       case "/area":
+        setActivePage("Area");
+        break;
       case "/area/tambah-area":
+        setActivePage("Area");
+        break;
       case "/area/edit-area":
         setActivePage("Area");
         break;
       case "/sensor":
+        setActivePage("Sensor");
+        break;
+      case "/sensor/tambah-sensor":
+        setActivePage("Sensor");
+        break;
+      case "/sensor/edit-sensor":
         setActivePage("Sensor");
         break;
       case "/profil":

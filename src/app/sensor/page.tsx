@@ -1,127 +1,124 @@
-import type { Metadata } from "next";
+'use client';
+
 import AddSensor from '../Components/AddButton';
-import EditArea from '../Components/editData';
+import EditSensor from '../Components/editData';
 import Hapus from '../assets/Hapus.svg';
 import Header from "../Components/header";
+import Site from "../Components/dropdownSite";
+import { useState, useEffect } from 'react';
 
-export const metadata: Metadata = {
-    title: "Sensor",
-    description: "AgroSmartSystem Sensor",
-};
+interface SensorData {
+    ds_id: string;
+    ds_name: string;
+    dc_normal_value: number;
+    ds_min_norm_value: number;
+    ds_max_norm_value: number;
+    ds_min_val_warn: number;
+    ds_max_val_warn: number;
+    ds_sts: number;
+}
 
-export default function page() {
+export default function Page() {
+    const [siteId, setSiteId] = useState<string>("SITE001");
+    const [sensorData, setSensorData] = useState<SensorData[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
+    useEffect(() => {
+        if (!siteId) return;
+
+        const fetchData = async () => {
+            setIsLoading(true);
+            setError(null); // Reset error state before fetching
+            try {
+                const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const data: SensorData[] = await response.json();
+                setSensorData(data);
+            } catch (error) {
+                console.error("Error fetching sensor data:", error);
+                setError((error as Error).message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [siteId]); // Re-run fetch when siteId changes
+
     return (
         <section>
-            <Header title={'Sensor'}/>
+            <Header title="Sensor" />
             <div className="p-6">
-                <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor"/>
-                {/* Table */}
+                {/* Site Dropdown to Change Site ID */}
+                <Site onSiteChange={(id) => setSiteId(id)} />
+
+                {/* Add Sensor Button */}
+                <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor" />
+
                 <div>
                     <div className="relative overflow-x-auto">
                         <table className="w-full text-base text-left rtl:text-right text-gray-500">
                             <thead className="text-base text-black uppercase bg-abu2 border-2 border-abu3">
                                 <tr>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        ID Area
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Label
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Simbol
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Lokasi
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Area
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Batas Normal Atas
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Batas Normal Bawah
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Status
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">
-                                        Aksi
-                                    </th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">ID Sensor</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Label</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Nilai Normal</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Normal Bawah</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Normal Atas</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Bawah</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Atas</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Status</th>
+                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="bg-white border-2 border-abu3 text-black">
-                                    <th scope="row" className="px-6 py-4 border-r-2 border-abu3 font-normal">
-                                        hum
-                                    </th>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Kelembapan Lingkungan
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-4">
-                                        %
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        BPP SELAAWI
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Lingkungan
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-48">
-                                        70
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-48">
-                                        50
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Aktif
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-2">
-                                        <div className="flex space-x-2">
-                                            {/* <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah"/> */}
-                                            <EditArea route="/sensor/edit-sensor"/>
-                                            <Hapus className="cursor-pointer text-warningSecondary hover:text-warning"/>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr className="bg-white border-2 border-abu3 text-black">
-                                    <th scope="row" className="px-6 py-4 border-r-2 border-abu3 font-normal">
-                                        ilum
-                                    </th>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Kecerahan
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-4">
-                                        L
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        BPP SELAAWI
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Lingkungan
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-48">
-                                        150
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-48">
-                                        50
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3">
-                                        Aktif
-                                    </td>
-                                    <td className="px-6 py-4 border-r-2 border-abu3 w-2">
-                                        <div className="flex space-x-2">
-                                            {/* <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah"/> */}
-                                            <EditArea route="/sensor/edit-sensor"/>
-                                            <Hapus className="cursor-pointer text-warningSecondary hover:text-warning"/>
-                                        </div>
-                                    </td>
-                                </tr>
+                                {isLoading ? (
+                                    <tr>
+                                        <td colSpan={9} className="px-6 py-4 text-center">Loading...</td>
+                                    </tr>
+                                ) : error ? (
+                                    <tr>
+                                        <td colSpan={9} className="px-6 py-4 text-center text-red-500">
+                                            {error}
+                                        </td>
+                                    </tr>
+                                ) : sensorData.length > 0 ? (
+                                    sensorData.map((sensor, index) => (
+                                        <tr key={index} className="bg-white border-2 border-abu3 text-black">
+                                            <th scope="row" className="px-6 py-4 border-r-2 border-abu3 font-normal">
+                                                {sensor.ds_id}
+                                            </th>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_name}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.dc_normal_value}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_min_norm_value}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_max_norm_value}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_min_val_warn}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_max_val_warn}</td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3">
+                                                {sensor.ds_sts === 1 ? "Active" : "Inactive"}
+                                            </td>
+                                            <td className="px-6 py-4 border-r-2 border-abu3 w-2">
+                                                <div className="flex space-x-2">
+                                                    <EditSensor route={`/sensor/edit-sensor?id=${sensor.ds_id}`} />
+                                                    <Hapus className="cursor-pointer text-warningSecondary hover:text-warning" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={9} className="px-6 py-4 text-center">No Data Available</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
-    )
+    );
 }

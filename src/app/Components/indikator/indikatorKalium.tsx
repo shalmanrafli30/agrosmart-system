@@ -3,19 +3,27 @@ import Kalium from '../../assets/K.svg';
 
 interface indikatorKaliumProps {
     kalium: number;
-    batasAtas: number;
-    batasBawah: number;
+    status: string;
 }
 
-const indikatorKalium: React.FC<indikatorKaliumProps> = ({kalium, batasAtas, batasBawah}) => {
+const indikatorKalium: React.FC<indikatorKaliumProps> = ({ kalium, status }) => {
+    const bgColor = {
+        OK: 'bg-primary',
+        Warning: 'bg-[#FFD74B]',
+        Danger: 'bg-warning',
+    }[status];
 
-    const bgColor = 
-        kalium > batasAtas || kalium < batasBawah ? 'bg-warning' : 
-        'bg-primary';
+    const bgIcon = {
+        OK: 'text-secondary',
+        Warning: 'text-[#FFF0B4]',
+        Danger: 'text-warningSecondary',
+    }[status];
 
-    const bgIcon =
-        kalium > batasAtas || kalium < batasBawah ? 'text-warningSecondary' : 
-        'text-secondary';
+    const textColor = {
+        OK: 'text-white',
+        Danger: 'text-white',
+        Warning: 'text-black'
+    }[status];
 
     return (
         <div className={`${bgColor} w-full h-auto p-4 text-white rounded-xl relative overflow-hidden`}>
@@ -23,8 +31,8 @@ const indikatorKalium: React.FC<indikatorKaliumProps> = ({kalium, batasAtas, bat
                 <Kalium className={`${bgIcon} w-1/4`} />
             </div>
             <div className='relative z-10'>
-                <h5 className="mb-3">Kalium</h5>
-                <span className="font-bold text-4xl">{kalium} K</span>
+                <h5 className={`mb-3 ${textColor}`}>Kalium</h5>
+                <span className={`font-bold text-4xl ${textColor}`}>{kalium} K</span>
             </div>
         </div>
     )

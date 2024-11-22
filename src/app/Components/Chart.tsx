@@ -4,83 +4,81 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
-interface EnvironmentalDataBarChartProps {
-  data: any[]; // Data dari API
+interface ChartProps {
+  data: { read_date: string; read_value: string }[]; // Data dari API
+  sensorName: string; // Nama sensor yang dipilih
 }
 
 // Function to preprocess data
-const preprocessData = (data: any[]) => {
-  const groupedData: Record<string, any> = {};
+const preprocessData = (data: { read_date: string; read_value: string }[]) => {
+  // Map timestamp dan nilai
+  const timestamps = data.map((item) => item.read_date);
+  const values = data.map((item) => parseFloat(item.read_value));
 
-  // Group data by timestamp
-  data.forEach((item) => {
-    const { read_date, ds_id, read_value } = item;
-    if (!groupedData[read_date]) {
-      groupedData[read_date] = { hum: null, ilum: null, rain: null, temp: null, wind: null };
-    }
-    groupedData[read_date][ds_id] = parseFloat(read_value);
-  });
-
-  // Extract timestamps and data for each series
-  const timestamps = Object.keys(groupedData);
-  const humidity = timestamps.map((time) => groupedData[time].hum);
-  const brightness = timestamps.map((time) => groupedData[time].ilum);
-  const rainfall = timestamps.map((time) => groupedData[time].rain);
-  const temperature = timestamps.map((time) => groupedData[time].temp);
-  const windSpeed = timestamps.map((time) => groupedData[time].wind);
-
-  return { timestamps, humidity, brightness, rainfall, temperature, windSpeed };
+  return { timestamps, values };
 };
 
-const EnvironmentalDataBarChart: React.FC<EnvironmentalDataBarChartProps> = ({ data }) => {
+const Chart: React.FC<ChartProps> = ({ data, sensorName }) => {
   if (!Array.isArray(data) || data.length === 0) {
-    return <div>Loading...</div>; // Tampilkan pesan loading jika data kosong
+    return <div>Loading or No Data Available...</div>; // Tampilkan pesan loading jika data kosong
   }
 
-  const { timestamps, humidity, brightness, rainfall, temperature, windSpeed } = preprocessData(data);
+  // Preprocess data
+  const { timestamps, values } = preprocessData(data);
 
+  // Konfigurasi opsi chart
   const chartOptions: ApexOptions = {
     chart: {
-      id: 'environmental-data-bar-chart',
+      id: 'sensor-data-chart',
       toolbar: { show: false },
       zoom: { enabled: true },
     },
     title: {
-      text: 'Data Lingkungan',
+      text: `Sensor Data: ${sensorName}`, // Menggunakan nama sensor untuk judul
       align: 'center',
     },
     xaxis: {
       categories: timestamps,
       labels: { rotate: -45 },
-    },
-    colors: ['#1D4ED8', '#6B46C1', '#FBBF24', '#34D399', '#EF4444'],
-    legend: { show: true, position: 'top' },
-    stroke: { width: 0 },
-    dataLabels: { enabled: false },
-    tooltip: { shared: true, intersect: false },
-    plotOptions: {
-      bar: {
-        columnWidth: '70%',
-        borderRadius: 5,
+      title: {
+        text: 'Timestamp',
+        style: { fontWeight: 'bold' },
       },
+    },
+    yaxis: {
+      title: {
+        text: 'Sensor Values',
+        style: { fontWeight: 'bold' },
+      },
+    },
+    colors: ['#34D399'], // Warna data
+    dataLabels: { enabled: false },
+    tooltip: {
+      enabled: true,
+      shared: true,
+      intersect: false,
+    },
+    stroke: {
+      width: 2,
+      curve: 'smooth',
     },
   };
 
+  // Series data
   const series = [
-    { name: 'Kelembapan Lingkungan', data: humidity },
-    { name: 'Kecerahan', data: brightness },
-    { name: 'Curah Hujan', data: rainfall },
-    { name: 'Suhu Lingkungan', data: temperature },
-    { name: 'Kecepatan Angin', data: windSpeed },
+    {
+      name: 'Sensor Value',
+      data: values,
+    },
   ];
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div id="hs-multiple-bar-chart">
-        <ReactApexChart options={chartOptions} series={series} type="bar" height={550} />
+      <div id="sensor-chart">
+        <ReactApexChart options={chartOptions} series={series} type="line" height={550} />
       </div>
     </div>
   );
 };
 
-export default EnvironmentalDataBarChart;
+export default Chart;

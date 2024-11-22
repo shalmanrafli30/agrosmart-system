@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
 import { useRouter } from 'next/navigation';
 import Edit from '../assets/Edit.svg';
 
-export default function ClientAreaComponent({ route }: { route: string }) {
+export default function EditData({ route }: { route: string }) {
     const router = useRouter();
 
     const handleClick = () => {
@@ -11,6 +11,6 @@ export default function ClientAreaComponent({ route }: { route: string }) {
     };
 
     return (
-        <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah" onClick={handleClick}/>
+        <Edit className="cursor-pointer text-[#F9B300] hover:text-kuningCerah" onClick={handleClick} />
     );
 }
