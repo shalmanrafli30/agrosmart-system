@@ -76,7 +76,7 @@ const Chart: React.FC<ChartProps> = ({ data, sensorName }) => {
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div id="sensor-chart">
-        <ReactApexChart options={chartOptions} series={series} type="line" height={550} />
+        <ReactApexChart options={chartOptions} series={series} type="bar" height={550} />
       </div>
     </div>
   );
