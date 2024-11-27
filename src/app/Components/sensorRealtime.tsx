@@ -32,9 +32,9 @@ const SensorRealtime: React.FC<SensorRealtimeProps> = ({ sensor, suhu, humid, ni
             <div className="bg-abu w-full rounded-md grid grid-cols-4 gap-2 p-4">
                 <IndikatorSuhu suhu={suhu} status={statusSuhu} />
                 <IndikatorPh ph={ph} status={statusPh}/>
-                <IndikatorNitrogen nitrogen={nitrogen} status={statusNitrogen} />
-                <IndikatorFosfor fosfor={fosfor} status={statusFosfor} />
-                <IndikatorKalium kalium={kalium} status={statusKalium} />
+                <IndikatorNitrogen nitrogen={nitrogen} />
+                <IndikatorFosfor fosfor={fosfor} />
+                <IndikatorKalium kalium={kalium} />
                 <IndikatorKelembapan humid={humid}/>
                 <IndikatorEc ec={ec}/>
                 <IndikatorTds tds={tds}/>
