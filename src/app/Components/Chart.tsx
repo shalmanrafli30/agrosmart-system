@@ -5,41 +5,51 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 
 interface ChartProps {
-  data: { read_date: string; read_value: string }[]; // Data dari API
-  sensorName: string; // Nama sensor yang dipilih
+  data: {
+    ds_id: string;
+    sensor_name: string;
+    read_date: string;
+    read_value: string;
+  }[]; // Data dari API
+  sensorName: string;
 }
-
-// Function to preprocess data
-const preprocessData = (data: { read_date: string; read_value: string }[]) => {
-  // Map timestamp dan nilai
-  const timestamps = data.map((item) => item.read_date);
-  const values = data.map((item) => parseFloat(item.read_value));
-
-  return { timestamps, values };
-};
 
 const Chart: React.FC<ChartProps> = ({ data, sensorName }) => {
   if (!Array.isArray(data) || data.length === 0) {
     return <div>Loading or No Data Available...</div>; // Tampilkan pesan loading jika data kosong
   }
 
-  // Preprocess data
-  const { timestamps, values } = preprocessData(data);
+  // Kelompokkan data berdasarkan sensor_name
+  const groupedData = data.reduce((acc, item) => {
+    if (!acc[item.sensor_name]) {
+      acc[item.sensor_name] = [];
+    }
+    acc[item.sensor_name].push({
+      x: item.read_date, // Timestamp
+      y: parseFloat(item.read_value), // Nilai sensor
+    });
+    return acc;
+  }, {} as Record<string, { x: string; y: number }[]>);
+
+  // Ubah groupedData menjadi format series untuk ApexCharts
+  const series = Object.entries(groupedData).map(([sensorName, readings]) => ({
+    name: sensorName,
+    data: readings,
+  }));
 
   // Konfigurasi opsi chart
   const chartOptions: ApexOptions = {
     chart: {
       id: 'sensor-data-chart',
-      toolbar: { show: false },
+      toolbar: { show: true },
       zoom: { enabled: true },
     },
     title: {
-      text: `Sensor Data: ${sensorName}`, // Menggunakan nama sensor untuk judul
+      text: `Sensor Data: ${sensorName}`,
       align: 'center',
     },
     xaxis: {
-      categories: timestamps,
-      labels: { rotate: -45 },
+      type: 'datetime',
       title: {
         text: 'Timestamp',
         style: { fontWeight: 'bold' },
@@ -51,7 +61,6 @@ const Chart: React.FC<ChartProps> = ({ data, sensorName }) => {
         style: { fontWeight: 'bold' },
       },
     },
-    colors: ['#34D399'], // Warna data
     dataLabels: { enabled: false },
     tooltip: {
       enabled: true,
@@ -63,14 +72,6 @@ const Chart: React.FC<ChartProps> = ({ data, sensorName }) => {
       curve: 'smooth',
     },
   };
-
-  // Series data
-  const series = [
-    {
-      name: 'Sensor Value',
-      data: values,
-    },
-  ];
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">

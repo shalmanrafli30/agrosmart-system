@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import Select from "react-select"; // Import React Select
 import Chart from '../Components/Chart';
-import Site from "../Components/dropdownSite";
+import Site from '../Components/dropdownSite';
 
 interface SensorData {
     ds_id: string;
@@ -11,7 +12,7 @@ interface SensorData {
 
 export default function Page() {
     const [siteId, setSiteId] = useState<string>("SITE001");
-    const [dsId, setDsId] = useState<string | null>(null); // State for selected ds_id
+    const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]); // State for selected sensors
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
     const [chartData, setChartData] = useState<any>(null);
@@ -33,9 +34,6 @@ export default function Page() {
                 }
                 const data: SensorData[] = await response.json();
                 setSensorData(data);
-                if (data.length > 0) {
-                    setDsId(data[0].ds_id); // Automatically select the first ds_id
-                }
             } catch (error) {
                 console.error("Error fetching sensor data:", error);
                 setError((error as Error).message);
@@ -47,14 +45,14 @@ export default function Page() {
 
     // Fetch History Data Based on Form Inputs
     const fetchHistoryData = async () => {
-        if (!dsId || !startDate || !endDate) {
+        if (selectedSensors.length === 0 || !startDate || !endDate) {
             setErrorMessage("Please select all required fields.");
             return;
         }
 
         const requestBody = {
             site_id: siteId,
-            ds_id: dsId,
+            sensors: selectedSensors.map(sensor => sensor.value), // Extract sensor IDs
             start_date: startDate,
             end_date: endDate,
         };
@@ -89,42 +87,37 @@ export default function Page() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        fetchHistoryData(); // Fetch history data on form submission
+        fetchHistoryData();
     };
 
     return (
         <div className="p-6">
             <div className="flex justify-between items-center w-full mb-4">
                 <Site onSiteChange={(id) => setSiteId(id)} />
-                <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
+                <span className="text-right">Update Terakhir: {new Date().toLocaleDateString()}</span>
             </div>
             <div className="mb-6 text-left">
                 <form className="max-w-fit" onSubmit={handleSubmit}>
-                    <div className="flex mb-4 w-fit">
-                        <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                            Sensor:
-                        </span>
-                        <select
-                            name="ds_id"
-                            id="ds_id"
-                            className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
-                            onChange={(e) => setDsId(e.target.value)}
-                            value={dsId || ''}
-                        >
-                            {sensorData.map((sensor) => (
-                                <option key={sensor.ds_id} value={sensor.ds_id}>
-                                    {sensor.ds_name}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="mb-4">
+                        <span className="block text-sm font-semibold mb-2">Sensor:</span>
+                        <Select
+                            isMulti
+                            options={sensorData.map(sensor => ({
+                                value: sensor.ds_id,
+                                label: sensor.ds_name,
+                            }))}
+                            value={selectedSensors}
+                            onChange={(selectedOptions) => setSelectedSensors(selectedOptions as any)}
+                            className="w-full"
+                        />
                     </div>
                     <div className="flex items-center space-x-5 mb-4">
                         <div className="flex">
                             <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                From:
+                                Dari:
                             </span>
                             <input
-                                type="datetime-local"
+                                type="date"
                                 name="start_date"
                                 className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
                                 onChange={(e) => setStartDate(e.target.value)}
@@ -133,10 +126,10 @@ export default function Page() {
                         <span className="font-bold text-2xl">-</span>
                         <div className="flex">
                             <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                To:
+                                Ke:
                             </span>
                             <input
-                                type="datetime-local"
+                                type="date"
                                 name="end_date"
                                 className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
                                 onChange={(e) => setEndDate(e.target.value)}
@@ -154,12 +147,11 @@ export default function Page() {
             )}
 
             {chartData && (
-            <Chart
-                data={chartData}
-                sensorName={sensorData.find((sensor) => sensor.ds_id === dsId)?.ds_name || 'Unknown'}
-            />
+                <Chart
+                    data={chartData}
+                    sensorName={selectedSensors.map(sensor => sensor.label).join(', ')}
+                />
             )}
-
         </div>
     );
 }

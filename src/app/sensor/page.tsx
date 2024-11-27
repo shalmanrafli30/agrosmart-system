@@ -99,7 +99,7 @@ export default function Page() {
                                             <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_min_val_warn}</td>
                                             <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_max_val_warn}</td>
                                             <td className="px-6 py-4 border-r-2 border-abu3">
-                                                {sensor.ds_sts === 1 ? "Active" : "Inactive"}
+                                                {sensor.ds_sts === 1 ? "Aktif" : "Tidak Aktif"}
                                             </td>
                                             <td className="px-6 py-4 border-r-2 border-abu3 w-2">
                                                 <div className="flex space-x-2">
