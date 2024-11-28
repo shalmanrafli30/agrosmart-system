@@ -1,164 +1,256 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic"; // Import dynamic untuk komponen klien
-import Chart from "../../Components/Chart";
-import Site from "../../Components/dropdownSite";
-
-// Load react-select hanya di klien
-const Select = dynamic(() => import("react-select"), { ssr: false });
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { GetServerSideProps } from "next";
+import Back from "../../Components/backButton";
+import Header from "../../Components/header";
 
 interface SensorData {
     ds_id: string;
     ds_name: string;
+    dc_normal_value: number;
+    ds_min_norm_value: number;
+    ds_max_norm_value: number;
+    ds_min_value: number;
+    ds_max_value: number;
+    ds_min_val_warn: number;
+    ds_max_val_warn: number;
+    ds_sts: number;
 }
 
-export default function Page() {
-    const [siteId, setSiteId] = useState<string>("SITE001");
-    const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]);
-    const [startDate, setStartDate] = useState<string | null>(null);
-    const [endDate, setEndDate] = useState<string | null>(null);
-    const [chartData, setChartData] = useState<any>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [sensorData, setSensorData] = useState<SensorData[]>([]);
+interface EditSensorFormProps {
+    sensorId: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { id } = context.query;
+
+    if (!id || typeof id !== "string") {
+        return {
+            notFound: true,
+        };
+    }
+
+    return {
+        props: {
+            sensorId: id,
+        },
+    };
+};
+
+function EditSensorForm({ sensorId }: EditSensorFormProps) {
+    const [sensorData, setSensorData] = useState<SensorData>({
+        ds_id: "",
+        ds_name: "",
+        dc_normal_value: 0,
+        ds_min_norm_value: 0,
+        ds_max_norm_value: 0,
+        ds_min_value: 0,
+        ds_max_value: 0,
+        ds_min_val_warn: 0,
+        ds_max_val_warn: 0,
+        ds_sts: 1,
+    });
+
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    // Fetch Sensor Data Based on Site ID
+    // Fetch sensor data
     useEffect(() => {
-        if (!siteId) return;
-
-        const fetchSensorData = async () => {
-            setError(null);
+        const fetchData = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
+                setLoading(true);
+                const response = await fetch(`${API_URL}/api/sensor/${sensorId}`);
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch sensor data: ${response.statusText}`);
+                    throw new Error("Failed to fetch sensor data");
                 }
-                const data: SensorData[] = await response.json();
+                const data = await response.json();
                 setSensorData(data);
-            } catch (error) {
-                console.error("Error fetching sensor data:", error);
-                setError((error as Error).message);
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError("An unexpected error occurred");
+                }
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchSensorData();
-    }, [siteId]);
-
-    // Fetch History Data Based on Form Inputs
-    const fetchHistoryData = async () => {
-        if (selectedSensors.length === 0 || !startDate || !endDate) {
-            setErrorMessage("Please select all required fields.");
-            return;
+        if (sensorId) {
+            fetchData();
         }
+    }, [sensorId]);
 
-        const requestBody = {
-            site_id: siteId,
-            sensors: selectedSensors.map(sensor => sensor.value),
-            start_date: startDate,
-            end_date: endDate,
-        };
-
-        console.log("Request body:", requestBody);
+    // Handle form submission
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setError(null);
 
         try {
-            const response = await fetch(`${API_URL}/api/riwayat`, {
-                method: "POST",
+            setLoading(true);
+            const response = await fetch(`${API_URL}/api/sensor/${sensorId}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(requestBody),
+                body: JSON.stringify(sensorData),
             });
 
-            const data = await response.json();
-            console.log("Received data:", data);
-
-            if (data.message) {
-                setErrorMessage(data.message);
-                setChartData(null);
-            } else {
-                setChartData(data);
-                setErrorMessage(null);
+            if (!response.ok) {
+                throw new Error("Failed to update sensor data");
             }
-        } catch (error) {
-            console.error("Error fetching history data:", error);
-            setErrorMessage("An error occurred while fetching data.");
-            setChartData(null);
+
+            alert("Sensor updated successfully!");
+            router.push("/sensor"); // Redirect to the sensor list page
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        fetchHistoryData();
+    // Handle input changes
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = event.target;
+        setSensorData((prev) => ({
+            ...prev,
+            [name]: name === "ds_sts" ? Number(value) : value, // Convert ds_sts to number
+        }));
     };
 
     return (
-        <div className="p-6">
-            <div className="flex justify-between items-center w-full mb-4">
-                <Site onSiteChange={(id) => setSiteId(id)} />
-                <span className="text-right">Update Terakhir: 1212</span>
-            </div>
-            <div className="mb-6 text-left">
-                <form className="max-w-fit" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <span className="block text-sm font-semibold mb-2">Sensor:</span>
-                        <Select
-                            isMulti
-                            options={sensorData.map(sensor => ({
-                                value: sensor.ds_id,
-                                label: sensor.ds_name,
-                            }))}
-                            value={selectedSensors}
-                            onChange={(selectedOptions) => setSelectedSensors(selectedOptions as any)}
-                            className="w-full"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 mb-4">
-                        <div className="flex">
-                            <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                Dari:
-                            </span>
-                            <input
-                                type="date"
-                                name="start_date"
-                                className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
-                                onChange={(e) => setStartDate(e.target.value)}
-                            />
-                        </div>
-                        <span className="font-bold text-2xl">-</span>
-                        <div className="flex">
-                            <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                Ke:
-                            </span>
-                            <input
-                                type="date"
-                                name="end_date"
-                                className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
-                                onChange={(e) => setEndDate(e.target.value)}
-                            />
-                        </div>
-                    </div>
+        <form onSubmit={handleSubmit} className="max-w-screen-md mx-0 space-y-10">
+            {loading && <p>Loading...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            <div className="mt-6 ml-6 bg-abu p-4">
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">ID Sensor</label>
+                    <input
+                        type="text"
+                        name="ds_id"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_id}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Label</label>
+                    <input
+                        type="text"
+                        name="ds_name"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Status</label>
+                    <select
+                        name="ds_sts"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2 font-bold"
+                        value={sensorData.ds_sts}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value={1}>Aktif</option>
+                        <option value={0}>Tidak Aktif</option>
+                    </select>
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Batas Nilai Normal</label>
+                    <input
+                        type="number"
+                        name="dc_normal_value"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.dc_normal_value}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Batas Normal Bawah</label>
+                    <input
+                        type="number"
+                        name="ds_min_norm_value"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_min_norm_value}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Batas Normal Atas</label>
+                    <input
+                        type="number"
+                        name="ds_max_norm_value"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_max_norm_value}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Batas Peringatan Bawah</label>
+                    <input
+                        type="number"
+                        name="ds_min_val_warn"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_min_val_warn}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Batas Peringatan Atas</label>
+                    <input
+                        type="number"
+                        name="ds_max_val_warn"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_max_val_warn}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="space-x-5 mt-6">
+                    <Back route="/sensor" />
                     <input
                         type="submit"
-                        value="Submit"
-                        className="bg-primary text-black font-semibold text-sm rounded-md p-3 cursor-pointer hover:bg-secondary w-2/12"
+                        value={loading ? "Saving..." : "Simpan"}
+                        className={`${
+                            loading ? "cursor-not-allowed opacity-50" : "hover:bg-kuningCerah"
+                        } bg-[#F9B300] text-white rounded-md p-3`}
+                        disabled={loading}
                     />
-                </form>
+                </div>                    
             </div>
+        </form>
+    );
+}
 
-            {errorMessage && (
-                <div className="bg-red-500 text-white p-3 rounded-md mb-4">
-                    {errorMessage}
-                </div>
-            )}
+export default function EditSensorPage() {
+    const searchParams = useSearchParams();
+    const sensorId = searchParams?.get("id");
 
-            {chartData && (
-                <Chart
-                    data={chartData}
-                    sensorName={selectedSensors.map(sensor => sensor.label).join(", ")}
-                />
-            )}
-        </div>
+    if (!sensorId) {
+        return <p className="text-red-500">Sensor ID is missing!</p>;
+    }
+
+    return (
+        <section>
+            <Header title="Edit Sensor" />
+            <Suspense fallback={<p>Loading...</p>}>
+                <EditSensorForm sensorId={sensorId} />
+            </Suspense>
+        </section>
     );
 }
