@@ -1,8 +1,5 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { GetServerSideProps } from "next";
+import { Suspense, useState } from "react";
 import Back from "../../Components/backButton";
 import Header from "../../Components/header";
 
@@ -19,78 +16,51 @@ interface SensorData {
     ds_sts: number;
 }
 
-interface EditSensorPageProps {
-    sensorId: string;
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { id } = context.query;
-
-    if (!id || typeof id !== "string") {
-        return {
-            notFound: true,
-        };
-    }
-
-    return {
-        props: {
-            sensorId: id,
-        },
-    };
-};
-
-const EditSensorPage = ({ sensorId }: EditSensorPageProps) => {
-    const [sensorData, setSensorData] = useState<SensorData>({
-        ds_id: "",
-        ds_name: "",
-        dc_normal_value: 0,
-        ds_min_norm_value: 0,
-        ds_max_norm_value: 0,
-        ds_min_value: 0,
-        ds_max_value: 0,
-        ds_min_val_warn: 0,
-        ds_max_val_warn: 0,
-        ds_sts: 1,
-    });
-
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
+async function fetchSensorData(sensorId: string): Promise<SensorData | null> {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    // Fetch sensor data
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${API_URL}/api/sensor/${sensorId}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch sensor data");
-                }
-                const data = await response.json();
-                setSensorData(data);
-            } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("An unexpected error occurred");
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
+    try {
+        const response = await fetch(`${API_URL}/api/sensor/${sensorId}`, {
+            cache: "no-store",
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch sensor data: ${response.statusText}`);
+        }
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
-        fetchData();
-    }, [sensorId]);
+export default async function EditSensorPage({ params }: { params: { id: string } }) {
+    const sensorId = params.id;
 
-    // Handle form submission
+    const sensorData = await fetchSensorData(sensorId);
+
+    if (!sensorData) {
+        return <p className="text-red-500">Failed to fetch sensor data.</p>;
+    }
+
+    return (
+        <section>
+            <Header title="Edit Sensor" />
+            <Suspense fallback={<p>Loading...</p>}>
+                <EditSensorForm sensorData={sensorData} />
+            </Suspense>
+        </section>
+    );
+}
+
+function EditSensorForm({ sensorData: initialSensorData }: { sensorData: SensorData }) {
+    const [sensorData, setSensorData] = useState<SensorData>(initialSensorData);
+    const router = useRouter();
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setError(null);
-
         try {
-            setLoading(true);
-            const response = await fetch(`${API_URL}/api/sensor/${sensorId}`, {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL;
+            const response = await fetch(`${API_URL}/api/sensor/${sensorData.ds_id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,88 +69,73 @@ const EditSensorPage = ({ sensorId }: EditSensorPageProps) => {
             });
 
             if (!response.ok) {
-                throw new Error("Failed to update sensor data");
+                throw new Error(`Failed to update sensor data: ${response.statusText}`);
             }
 
             alert("Sensor updated successfully!");
-            router.push("/sensor"); // Redirect to the sensor list page
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unexpected error occurred");
-            }
-        } finally {
-            setLoading(false);
+            router.push("/sensor");
+        } catch (error) {
+            console.error(error);
+            alert("Failed to update sensor data.");
         }
     };
 
-    // Handle input changes
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-        setSensorData((prev) => ({
-            ...prev,
-            [name]: name === "ds_sts" ? Number(value) : value, // Convert ds_sts to number
+
+        setSensorData((prevState) => ({
+            ...prevState,
+            [name]: name === "ds_sts" ? Number(value) : value,
         }));
     };
 
     return (
-        <section>
-            <Header title="Edit Sensor" />
-            <form onSubmit={handleSubmit} className="max-w-screen-md mx-0 space-y-10">
-                {loading && <p>Loading...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-                <div className="mt-6 ml-6 bg-abu p-4">
-                    <div className="flex space-x-5 items-center mb-2">
-                        <label className="text-black text-base font-bold w-32">ID Sensor</label>
-                        <input
-                            type="text"
-                            name="ds_id"
-                            className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                            value={sensorData.ds_id}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="flex space-x-5 items-center mb-2">
-                        <label className="text-black text-base font-bold w-32">Label</label>
-                        <input
-                            type="text"
-                            name="ds_name"
-                            className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                            value={sensorData.ds_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="flex space-x-5 items-center mb-2">
-                        <label className="text-black text-base font-bold w-32">Status</label>
-                        <select
-                            name="ds_sts"
-                            className="bg-white border border-abu3 text-black text-sm w-full p-2 font-bold"
-                            value={sensorData.ds_sts}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value={1}>Aktif</option>
-                            <option value={0}>Tidak Aktif</option>
-                        </select>
-                    </div>
-                    <div className="space-x-5 mt-6">
-                        <Back route="/sensor" />
-                        <input
-                            type="submit"
-                            value={loading ? "Saving..." : "Simpan"}
-                            className={`${
-                                loading ? "cursor-not-allowed opacity-50" : "hover:bg-kuningCerah"
-                            } bg-[#F9B300] text-white rounded-md p-3`}
-                            disabled={loading}
-                        />
-                    </div>
+        <form onSubmit={handleSubmit} className="max-w-screen-md mx-0 space-y-10">
+            <div className="mt-6 ml-6 bg-abu p-4">
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">ID Sensor</label>
+                    <input
+                        type="text"
+                        name="ds_id"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_id}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-            </form>
-        </section>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Label</label>
+                    <input
+                        type="text"
+                        name="ds_name"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                        value={sensorData.ds_name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="flex space-x-5 items-center mb-2">
+                    <label className="text-black text-base font-bold w-32">Status</label>
+                    <select
+                        name="ds_sts"
+                        className="bg-white border border-abu3 text-black text-sm w-full p-2 font-bold"
+                        value={sensorData.ds_sts}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value={1}>Aktif</option>
+                        <option value={0}>Tidak Aktif</option>
+                    </select>
+                </div>
+                <div className="space-x-5 mt-6">
+                    <Back route="/sensor" />
+                    <input
+                        type="submit"
+                        value="Simpan"
+                        className="bg-[#F9B300] text-white rounded-md p-3"
+                    />
+                </div>
+            </div>
+        </form>
     );
-};
-
-export default EditSensorPage;
+}
