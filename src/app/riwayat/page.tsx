@@ -1,9 +1,12 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import Select from "react-select"; // Import React Select
-import Chart from '../Components/Chart';
-import Site from '../Components/dropdownSite';
+import dynamic from "next/dynamic"; // Import dynamic untuk komponen klien
+import Chart from "../Components/Chart";
+import Site from "../Components/dropdownSite";
+
+// Load react-select hanya di klien
+const Select = dynamic(() => import("react-select"), { ssr: false });
 
 interface SensorData {
     ds_id: string;
@@ -12,7 +15,7 @@ interface SensorData {
 
 export default function Page() {
     const [siteId, setSiteId] = useState<string>("SITE001");
-    const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]); // State for selected sensors
+    const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]);
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
     const [chartData, setChartData] = useState<any>(null);
@@ -52,7 +55,7 @@ export default function Page() {
 
         const requestBody = {
             site_id: siteId,
-            sensors: selectedSensors.map(sensor => sensor.value), // Extract sensor IDs
+            sensors: selectedSensors.map(sensor => sensor.value),
             start_date: startDate,
             end_date: endDate,
         };
@@ -61,9 +64,9 @@ export default function Page() {
 
         try {
             const response = await fetch(`${API_URL}/api/riwayat`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(requestBody),
             });
@@ -80,7 +83,7 @@ export default function Page() {
             }
         } catch (error) {
             console.error("Error fetching history data:", error);
-            setErrorMessage('An error occurred while fetching data.');
+            setErrorMessage("An error occurred while fetching data.");
             setChartData(null);
         }
     };
@@ -136,7 +139,11 @@ export default function Page() {
                             />
                         </div>
                     </div>
-                    <input type="submit" value="Submit" className="bg-primary text-black font-semibold text-sm rounded-md p-3 cursor-pointer hover:bg-secondary w-2/12" />
+                    <input
+                        type="submit"
+                        value="Submit"
+                        className="bg-primary text-black font-semibold text-sm rounded-md p-3 cursor-pointer hover:bg-secondary w-2/12"
+                    />
                 </form>
             </div>
 
@@ -149,7 +156,7 @@ export default function Page() {
             {chartData && (
                 <Chart
                     data={chartData}
-                    sensorName={selectedSensors.map(sensor => sensor.label).join(', ')}
+                    sensorName={selectedSensors.map(sensor => sensor.label).join(", ")}
                 />
             )}
         </div>
