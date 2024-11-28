@@ -50,10 +50,9 @@ interface DataResponse {
   plants: Plant[];
 }
 
-export default function HomePage() {
+export default function dashboard() {
   const [siteId, setSiteId] = useState<string>("SITE001");
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [data, setData] = useState<DataResponse>({
     site_id: "",
     temperature: { data: { read_value: "0" }, value_status: "", status_message: "", action_message: "" },
@@ -68,7 +67,7 @@ export default function HomePage() {
     if (!siteId) return;
 
     // Fetch data utama (menggunakan query parameter)
-    fetch(`${API_URL}/api/dashboard?site_id=${siteId}`, {
+    fetch(`/api/dashboard?site_id=${siteId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +83,7 @@ export default function HomePage() {
       .catch((error) => console.error("Error fetching dashboard data:", error));
 
     // Fetch data realtime (juga menggunakan query parameter)
-    fetch(`${API_URL}/api/realtime?site_id=${siteId}`, {
+    fetch(`/api/realtime?site_id=${siteId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
