@@ -103,7 +103,7 @@ export default function Page() {
                                             </td>
                                             <td className="px-6 py-4 border-r-2 border-abu3 w-2">
                                                 <div className="flex space-x-2">
-                                                    <EditSensor route={`/sensor/edit-sensor?id=${sensor.ds_id}`} />
+                                                <EditSensor route={`/sensor/edit-sensor/${sensor.ds_id}`} />
                                                     <Hapus className="cursor-pointer text-warningSecondary hover:text-warning" />
                                                 </div>
                                             </td>

@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import Chart from "../Components/Chart";
+// import Chart from "../Components/Chart";
 import Site from "../Components/dropdownSite";
-
-// Load react-select hanya di klien
-const Select = dynamic(() => import("react-select"), { ssr: false });
+import Select from "react-select";
+import dynamic from "next/dynamic";
+const Chart = dynamic(() => import("../Components/Chart"), { ssr: false });
 
 interface SensorData {
     ds_id: string;
     ds_name: string;
 }
 
-export default function Page() {
+export default function RiwayatPage() {
     const [siteId, setSiteId] = useState<string>("SITE001");
     const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]);
     const [startDate, setStartDate] = useState<string | null>(null);
@@ -29,7 +28,6 @@ export default function Page() {
         if (!siteId) return;
 
         const fetchSensorData = async () => {
-            setError(null);
             try {
                 const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
                 if (!response.ok) {
@@ -37,9 +35,9 @@ export default function Page() {
                 }
                 const data: SensorData[] = await response.json();
                 setSensorData(data);
-            } catch (error) {
-                console.error("Error fetching sensor data:", error);
-                setError((error as Error).message);
+            } catch (err) {
+                console.error("Error fetching sensor data:", err);
+                setError((err as Error).message);
             }
         };
 
@@ -60,8 +58,6 @@ export default function Page() {
             end_date: endDate,
         };
 
-        console.log("Request body:", requestBody);
-
         try {
             const response = await fetch(`${API_URL}/api/riwayat`, {
                 method: "POST",
@@ -72,8 +68,6 @@ export default function Page() {
             });
 
             const data = await response.json();
-            console.log("Received data:", data);
-
             if (data.message) {
                 setErrorMessage(data.message);
                 setChartData(null);
@@ -81,8 +75,8 @@ export default function Page() {
                 setChartData(data);
                 setErrorMessage(null);
             }
-        } catch (error) {
-            console.error("Error fetching history data:", error);
+        } catch (err) {
+            console.error("Error fetching history data:", err);
             setErrorMessage("An error occurred while fetching data.");
             setChartData(null);
         }
@@ -99,66 +93,56 @@ export default function Page() {
                 <Site onSiteChange={(id) => setSiteId(id)} />
                 <span className="text-right">Update Terakhir: 1212</span>
             </div>
-            <div className="mb-6 text-left">
-                <form className="max-w-fit" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <span className="block text-sm font-semibold mb-2">Sensor:</span>
-                        <Select
-                            isMulti
-                            options={sensorData.map((sensor) => ({
-                                value: sensor.ds_id,
-                                label: sensor.ds_name,
-                            }))}
-                            value={selectedSensors}
-                            onChange={(selectedOptions) => setSelectedSensors(selectedOptions as any)}
-                            className="w-full"
+            <form onSubmit={handleSubmit} className="max-w-fit">
+                <div className="mb-4">
+                    <span className="block text-sm font-semibold mb-2">Sensor:</span>
+                    <Select
+                        isMulti
+                        options={sensorData.map((sensor) => ({
+                            value: sensor.ds_id,
+                            label: sensor.ds_name,
+                        }))}
+                        value={selectedSensors}
+                        onChange={(selectedOptions) => setSelectedSensors(selectedOptions as any)}
+                        className="w-full"
+                    />
+                </div>
+                <div className="flex items-center space-x-5 mb-4">
+                    <div className="flex">
+                        <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
+                            Dari:
+                        </span>
+                        <input
+                            type="date"
+                            name="start_date"
+                            className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
+                            onChange={(e) => setStartDate(e.target.value)}
                         />
                     </div>
-                    <div className="flex items-center space-x-5 mb-4">
-                        <div className="flex">
-                            <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                Dari:
-                            </span>
-                            <input
-                                type="date"
-                                name="start_date"
-                                className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
-                                onChange={(e) => setStartDate(e.target.value)}
-                            />
-                        </div>
-                        <span className="font-bold text-2xl">-</span>
-                        <div className="flex">
-                            <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
-                                Ke:
-                            </span>
-                            <input
-                                type="date"
-                                name="end_date"
-                                className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
-                                onChange={(e) => setEndDate(e.target.value)}
-                            />
-                        </div>
+                    <span className="font-bold text-2xl">-</span>
+                    <div className="flex">
+                        <span className="inline-flex items-center px-3 text-sm text-black font-semibold bg-primary border border-e-0 border-primary rounded-s-md">
+                            Ke:
+                        </span>
+                        <input
+                            type="date"
+                            name="end_date"
+                            className="rounded-none rounded-e-lg bg-white border border-primary text-black block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-transparent"
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
                     </div>
-                    <input
-                        type="submit"
-                        value="Submit"
-                        className="bg-primary text-black font-semibold text-sm rounded-md p-3 cursor-pointer hover:bg-secondary w-2/12"
-                    />
-                </form>
-            </div>
-
-            {errorMessage && (
-                <div className="bg-red-500 text-white p-3 rounded-md mb-4">
-                    {errorMessage}
                 </div>
-            )}
+                <button
+                    type="submit"
+                    className="bg-primary text-black font-semibold text-sm rounded-md p-3 hover:bg-secondary w-2/12"
+                >
+                    Submit
+                </button>
+            </form>
 
-            {chartData && (
-                <Chart
-                    data={chartData}
-                    sensorName={selectedSensors.map((sensor) => sensor.label).join(", ")}
-                />
-            )}
+            {errorMessage && <div className="bg-red-500 text-white p-3 rounded-md mb-4">{errorMessage}</div>}
+
+            {chartData && <Chart data={chartData} sensorName={selectedSensors.map((sensor) => sensor.label).join(", ")} />}
         </div>
     );
 }
