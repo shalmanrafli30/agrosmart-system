@@ -10,16 +10,32 @@ export async function middleware(request) {
         url.port = "8095"; // Port API eksternal
         url.pathname = pathname.replace("/api", "/kwt24/api"); // Path API eksternal
 
-        return fetch(url.toString(), {
-            method: request.method,
-            headers: request.headers,
-            body: request.body,
-        }).then((response) => {
+        try {
+            const response = await fetch(url.toString(), {
+                method: request.method,
+                headers: request.headers,
+                body: request.body,
+            });
+
+            // Buat respons dengan header CORS
+            const headers = new Headers(response.headers);
+            headers.set("Access-Control-Allow-Origin", "*");
+            headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+            // Tangani permintaan OPTIONS (preflight request)
+            if (request.method === "OPTIONS") {
+                return new NextResponse(null, { headers, status: 204 });
+            }
+
             return new NextResponse(response.body, {
-                headers: response.headers,
+                headers,
                 status: response.status,
             });
-        });
+        } catch (error) {
+            console.error("Error proxying request:", error);
+            return new NextResponse("Error proxying request", { status: 500 });
+        }
     }
 
     return NextResponse.next();
