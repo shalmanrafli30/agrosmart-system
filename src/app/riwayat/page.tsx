@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic"; // Import dynamic untuk komponen klien
+import dynamic from "next/dynamic";
 import Chart from "../Components/Chart";
 import Site from "../Components/dropdownSite";
 
@@ -55,7 +55,7 @@ export default function Page() {
 
         const requestBody = {
             site_id: siteId,
-            sensors: selectedSensors.map(sensor => sensor.value),
+            sensors: selectedSensors.map((sensor) => sensor.value),
             start_date: startDate,
             end_date: endDate,
         };
@@ -105,7 +105,7 @@ export default function Page() {
                         <span className="block text-sm font-semibold mb-2">Sensor:</span>
                         <Select
                             isMulti
-                            options={sensorData.map(sensor => ({
+                            options={sensorData.map((sensor) => ({
                                 value: sensor.ds_id,
                                 label: sensor.ds_name,
                             }))}
@@ -156,7 +156,7 @@ export default function Page() {
             {chartData && (
                 <Chart
                     data={chartData}
-                    sensorName={selectedSensors.map(sensor => sensor.label).join(", ")}
+                    sensorName={selectedSensors.map((sensor) => sensor.label).join(", ")}
                 />
             )}
         </div>
