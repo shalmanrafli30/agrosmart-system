@@ -60,7 +60,7 @@ export default function EditSensorPage() {
 
         try {
             setLoading(true);
-            const response = await fetch(`http://127.0.0.1:8000/api/sensor/${sensorId}`, {
+            const response = await fetch(`${API_URL}/api/sensor/${sensorId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
