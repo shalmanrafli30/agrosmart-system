@@ -94,7 +94,7 @@ export default function Page() {
         <div className="p-6">
             <div className="flex justify-between items-center w-full mb-4">
                 <Site onSiteChange={(id) => setSiteId(id)} />
-                <span className="text-right">Update Terakhir: {new Date().toLocaleDateString()}</span>
+                <span className="text-right">Update Terakhir: 1212</span>
             </div>
             <div className="mb-6 text-left">
                 <form className="max-w-fit" onSubmit={handleSubmit}>
