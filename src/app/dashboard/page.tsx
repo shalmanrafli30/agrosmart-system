@@ -53,7 +53,7 @@ interface DataResponse {
 export default function HomePage() {
   const [siteId, setSiteId] = useState<string>("SITE001");
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [data, setData] = useState<DataResponse>({
     site_id: "",
     temperature: { data: { read_value: "0" }, value_status: "", status_message: "", action_message: "" },

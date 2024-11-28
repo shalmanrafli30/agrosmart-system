@@ -43,7 +43,7 @@ export default function Realtime() {
     useEffect(() => {
         if (!siteId) return;
         console.log("Fetching data for siteId:", siteId);
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
         fetch(`${API_URL}/api/realtime?site_id=${siteId}`, {
             method: "GET",

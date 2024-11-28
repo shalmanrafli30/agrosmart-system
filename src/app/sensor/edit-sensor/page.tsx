@@ -24,13 +24,14 @@ export default function EditSensorPage() {
     const searchParams = useSearchParams();
     const sensorId = searchParams.get("id");
     const router = useRouter();
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     // Fetch sensor data when the component loads
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://127.0.0.1:8000/api/sensor/${sensorId}`);
+                const response = await fetch(`${API_URL}/api/sensor/${sensorId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch sensor data");
                 }
