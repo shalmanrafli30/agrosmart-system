@@ -1,19 +1,26 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function middleware(request) {
-    const response = NextResponse.next();
+    const { pathname } = request.nextUrl;
 
-    // Tambahkan header CORS
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    // Proxy semua permintaan yang diawali dengan `/api`
+    if (pathname.startsWith("/api")) {
+        const url = new URL(request.nextUrl);
+        url.hostname = "103.165.222.254"; // Host API eksternal
+        url.port = "8095"; // Port API eksternal
+        url.pathname = pathname.replace("/api", "/kwt24/api"); // Path API eksternal
 
-    // Izinkan metode OPTIONS
-    if (request.method === 'OPTIONS') {
-        return new Response(null, {
-            headers: response.headers,
+        return fetch(url.toString(), {
+            method: request.method,
+            headers: request.headers,
+            body: request.body,
+        }).then((response) => {
+            return new NextResponse(response.body, {
+                headers: response.headers,
+                status: response.status,
+            });
         });
     }
 
-    return response;
+    return NextResponse.next();
 }

@@ -31,7 +31,7 @@ export default function RiwayatClient() {
         const fetchSensorData = async () => {
             setError(null);
             try {
-                const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
+                const response = await fetch(`/api/sensor?site_id=${siteId}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch sensor data: ${response.statusText}`);
                 }

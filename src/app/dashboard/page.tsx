@@ -69,7 +69,7 @@ export default function dashboard() {
     if (!siteId) return;
 
     // Fetch data utama (menggunakan query parameter)
-    fetch(`${API_URL}/api/dashboard?site_id=${siteId}`, {
+    fetch(`/api/dashboard?site_id=${siteId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function dashboard() {
       .catch((error) => console.error("Error fetching dashboard data:", error));
 
     // Fetch data realtime (juga menggunakan query parameter)
-    fetch(`${API_URL}/api/realtime?site_id=${siteId}`, {
+    fetch(`/api/realtime?site_id=${siteId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -32,7 +32,7 @@ export default function Page() {
             setIsLoading(true);
             setError(null); // Reset error state before fetching
             try {
-                const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
+                const response = await fetch(`/api/sensor?site_id=${siteId}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch data: ${response.statusText}`);
                 }

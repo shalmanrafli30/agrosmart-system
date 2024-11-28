@@ -45,7 +45,7 @@ export default function Realtime() {
         console.log("Fetching data for siteId:", siteId);
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-        fetch(`${API_URL}/api/realtime?site_id=${siteId}`, {
+        fetch(`/api/realtime?site_id=${siteId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
