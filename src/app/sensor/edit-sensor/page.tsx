@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { GetServerSideProps } from "next";
 import Back from "../../Components/backButton";
 import Header from "../../Components/header";
@@ -19,7 +19,7 @@ interface SensorData {
     ds_sts: number;
 }
 
-interface EditSensorFormProps {
+interface EditSensorPageProps {
     sensorId: string;
 }
 
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-function EditSensorForm({ sensorId }: EditSensorFormProps) {
+const EditSensorPage = ({ sensorId }: EditSensorPageProps) => {
     const [sensorData, setSensorData] = useState<SensorData>({
         ds_id: "",
         ds_name: "",
@@ -80,9 +80,7 @@ function EditSensorForm({ sensorId }: EditSensorFormProps) {
             }
         };
 
-        if (sensorId) {
-            fetchData();
-        }
+        fetchData();
     }, [sensorId]);
 
     // Handle form submission
@@ -127,130 +125,62 @@ function EditSensorForm({ sensorId }: EditSensorFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-screen-md mx-0 space-y-10">
-            {loading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="mt-6 ml-6 bg-abu p-4">
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">ID Sensor</label>
-                    <input
-                        type="text"
-                        name="ds_id"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_id}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Label</label>
-                    <input
-                        type="text"
-                        name="ds_name"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Status</label>
-                    <select
-                        name="ds_sts"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2 font-bold"
-                        value={sensorData.ds_sts}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value={1}>Aktif</option>
-                        <option value={0}>Tidak Aktif</option>
-                    </select>
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Batas Nilai Normal</label>
-                    <input
-                        type="number"
-                        name="dc_normal_value"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.dc_normal_value}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Batas Normal Bawah</label>
-                    <input
-                        type="number"
-                        name="ds_min_norm_value"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_min_norm_value}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Batas Normal Atas</label>
-                    <input
-                        type="number"
-                        name="ds_max_norm_value"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_max_norm_value}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Batas Peringatan Bawah</label>
-                    <input
-                        type="number"
-                        name="ds_min_val_warn"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_min_val_warn}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="flex space-x-5 items-center mb-2">
-                    <label className="text-black text-base font-bold w-32">Batas Peringatan Atas</label>
-                    <input
-                        type="number"
-                        name="ds_max_val_warn"
-                        className="bg-white border border-abu3 text-black text-sm w-full p-2"
-                        value={sensorData.ds_max_val_warn}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="space-x-5 mt-6">
-                    <Back route="/sensor" />
-                    <input
-                        type="submit"
-                        value={loading ? "Saving..." : "Simpan"}
-                        className={`${
-                            loading ? "cursor-not-allowed opacity-50" : "hover:bg-kuningCerah"
-                        } bg-[#F9B300] text-white rounded-md p-3`}
-                        disabled={loading}
-                    />
-                </div>                    
-            </div>
-        </form>
-    );
-}
-
-export default function EditSensorPage() {
-    const searchParams = useSearchParams();
-    const sensorId = searchParams?.get("id");
-
-    if (!sensorId) {
-        return <p className="text-red-500">Sensor ID is missing!</p>;
-    }
-
-    return (
         <section>
             <Header title="Edit Sensor" />
-            <Suspense fallback={<p>Loading...</p>}>
-                <EditSensorForm sensorId={sensorId} />
-            </Suspense>
+            <form onSubmit={handleSubmit} className="max-w-screen-md mx-0 space-y-10">
+                {loading && <p>Loading...</p>}
+                {error && <p className="text-red-500">{error}</p>}
+                <div className="mt-6 ml-6 bg-abu p-4">
+                    <div className="flex space-x-5 items-center mb-2">
+                        <label className="text-black text-base font-bold w-32">ID Sensor</label>
+                        <input
+                            type="text"
+                            name="ds_id"
+                            className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                            value={sensorData.ds_id}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="flex space-x-5 items-center mb-2">
+                        <label className="text-black text-base font-bold w-32">Label</label>
+                        <input
+                            type="text"
+                            name="ds_name"
+                            className="bg-white border border-abu3 text-black text-sm w-full p-2"
+                            value={sensorData.ds_name}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="flex space-x-5 items-center mb-2">
+                        <label className="text-black text-base font-bold w-32">Status</label>
+                        <select
+                            name="ds_sts"
+                            className="bg-white border border-abu3 text-black text-sm w-full p-2 font-bold"
+                            value={sensorData.ds_sts}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value={1}>Aktif</option>
+                            <option value={0}>Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div className="space-x-5 mt-6">
+                        <Back route="/sensor" />
+                        <input
+                            type="submit"
+                            value={loading ? "Saving..." : "Simpan"}
+                            className={`${
+                                loading ? "cursor-not-allowed opacity-50" : "hover:bg-kuningCerah"
+                            } bg-[#F9B300] text-white rounded-md p-3`}
+                            disabled={loading}
+                        />
+                    </div>
+                </div>
+            </form>
         </section>
     );
-}
+};
+
+export default EditSensorPage;
