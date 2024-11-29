@@ -3,20 +3,25 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
     const { pathname, search } = request.nextUrl;
 
-    // Proxy semua permintaan yang diawali dengan `/api`
+    // Tangkap semua request yang diawali dengan `/api`
     if (pathname.startsWith("/api")) {
-        const targetUrl = new URL(`http://api.kawaltani.id:8082${pathname.replace("/api", "")}${search}`);
+        // URL API eksternal
+        const externalUrl = `http://api.kawaltani.id:8082${pathname.replace("/api", "/api")}${search}`;
+
+        console.log("Proxying to external API:", externalUrl); // Debugging
 
         try {
-            const response = await fetch(targetUrl.toString(), {
+            // Lakukan fetch ke API eksternal
+            const response = await fetch(externalUrl, {
                 method: request.method,
                 headers: {
                     ...Object.fromEntries(request.headers),
-                    host: undefined,
+                    host: undefined, // Hapus header `host` agar sesuai dengan API target
                 },
                 body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
             });
 
+            // Transfer respons dari API eksternal ke klien
             const headers = new Headers(response.headers);
             headers.set("Access-Control-Allow-Origin", "*");
             headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
