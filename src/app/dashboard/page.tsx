@@ -120,7 +120,7 @@ export default function Dashboard() {
     <div className="p-6">
       <div className="flex justify-between items-center w-full mb-4">
         <Site onSiteChange={(id) => setSiteId(id)} />
-        <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
+        <span className="text-right">Update Terakhir: TES</span>
       </div>
 
       <div className="flex gap-2">
