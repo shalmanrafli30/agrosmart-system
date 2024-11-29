@@ -5,25 +5,23 @@ export async function middleware(request) {
 
     // Proxy semua permintaan yang diawali dengan `/api`
     if (pathname.startsWith("/api")) {
-        const targetUrl = new URL(`http://api.kawaltani.id:8082${pathname}${search}`); // Path API eksternal
+        const targetUrl = new URL(`http://api.kawaltani.id:8082${pathname.replace("/api", "")}${search}`);
 
         try {
             const response = await fetch(targetUrl.toString(), {
                 method: request.method,
                 headers: {
                     ...Object.fromEntries(request.headers),
-                    host: undefined, // Hapus header host
+                    host: undefined,
                 },
                 body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
             });
 
-            // Buat respons dengan header CORS
             const headers = new Headers(response.headers);
             headers.set("Access-Control-Allow-Origin", "*");
             headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-            // Tangani permintaan OPTIONS (preflight request)
             if (request.method === "OPTIONS") {
                 return new NextResponse(null, { headers, status: 204 });
             }
