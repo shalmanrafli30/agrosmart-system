@@ -57,6 +57,7 @@ interface Plant {
 export default function Dashboard() {
   const [siteId, setSiteId] = useState<string>("SITE001");
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [data, setData] = useState<DataResponse>({
     nitrogen: [],
     fosfor: [],
@@ -74,7 +75,7 @@ export default function Dashboard() {
     if (!siteId) return;
 
     // Fetch dashboard data
-    fetch(`/api/dashboard?site_id=${siteId}`)
+    fetch(`${API_URL}/api/dashboard?site_id=${siteId}`)
       .then((res) => res.json())
       .then((dashboardData: DataResponse) => {
         console.log("Dashboard Data:", dashboardData); // Debugging
@@ -83,7 +84,7 @@ export default function Dashboard() {
       .catch((error) => console.error("Error fetching dashboard data:", error));
 
     // Fetch realtime data
-    fetch(`/api/realtime?site_id=${siteId}`)
+    fetch(`${API_URL}/api/realtime?site_id=${siteId}`)
       .then((res) => res.json())
       .then((realtimeData: Partial<DataResponse>) => {
         console.log("Realtime Data:", realtimeData); // Debugging
