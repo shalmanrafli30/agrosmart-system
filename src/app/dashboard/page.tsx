@@ -7,17 +7,39 @@ import IndikatorAngin from "../Components/indikator/indikatorKecAngin";
 import IndikatorCahaya from "../Components/indikator/indikatorCahaya";
 import IndikatorHujan from "../Components/indikator/indikatorHujan";
 import Map from "../Components/map";
-import Tugas from "../Components/warning/tugas";
-import Warning from "../Components/warning/anomali";
 import FloatingGallery from "../Components/GalleryModal";
 import Site from "../Components/dropdownSite";
-
+import Realtime from "../Components/indikator/realtimeDashboard";
+import Warning from "../Components/warning/anomali";
 
 interface ActionMessage {
   sensor_name: string;
   action_message: string;
   status_message: string;
-  value_status:string;
+  value_status: string;
+}
+
+interface SensorRealtime {
+  sensor: string;
+  read_value: string | number;
+  read_date: string | null;
+  value_status?: string;
+  status_message?: string;
+  action_message?: string;
+  sensor_name?: string;
+}
+
+interface DataResponse {
+  nitrogen?: SensorRealtime[];
+  fosfor?: SensorRealtime[];
+  kalium?: SensorRealtime[];
+  soil_ph?: SensorRealtime[];
+  temperature?: { data: { read_value: string } };
+  humidity?: { data: { read_value: string } };
+  wind?: { data: { read_value: string } };
+  lux?: { data: { read_value: string } };
+  rain?: { data: { read_value: string } };
+  plants?: Plant[];
 }
 
 interface Plant {
@@ -32,32 +54,15 @@ interface Plant {
   variety: string;
 }
 
-interface SensorData {
-  data: {
-    read_value: string;
-  };
-  value_status?: string;
-  status_message?: string;
-  action_message?: string;
-}
-
-interface DataResponse {
-  site_id: string;
-  temperature: SensorData;
-  humidity: SensorData;
-  wind: SensorData;
-  lux: SensorData;
-  rain: SensorData;
-  plants: Plant[];
-}
-
-export default function dashboard() {
+export default function Dashboard() {
   const [siteId, setSiteId] = useState<string>("SITE001");
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [data, setData] = useState<DataResponse>({
-    site_id: "",
-    temperature: { data: { read_value: "0" }, value_status: "", status_message: "", action_message: "" },
+    nitrogen: [],
+    fosfor: [],
+    kalium: [],
+    soil_ph: [],
+    temperature: { data: { read_value: "0" } },
     humidity: { data: { read_value: "0" } },
     wind: { data: { read_value: "0" } },
     lux: { data: { read_value: "0" } },
@@ -68,52 +73,44 @@ export default function dashboard() {
   useEffect(() => {
     if (!siteId) return;
 
-    // Fetch data utama (menggunakan query parameter)
-    fetch(`/api/dashboard?site_id=${siteId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch dashboard data: ${response.status}`);
-        }
-        return response.json();
+    // Fetch dashboard data
+    fetch(`/api/dashboard?site_id=${siteId}`)
+      .then((res) => res.json())
+      .then((dashboardData: DataResponse) => {
+        console.log("Dashboard Data:", dashboardData); // Debugging
+        setData((prev) => ({ ...prev, ...dashboardData }));
       })
-      .then((data: DataResponse) => setData(data))
       .catch((error) => console.error("Error fetching dashboard data:", error));
 
-    // Fetch data realtime (juga menggunakan query parameter)
-    fetch(`/api/realtime?site_id=${siteId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch realtime data: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((jsonData) => {
+    // Fetch realtime data
+    fetch(`/api/realtime?site_id=${siteId}`)
+      .then((res) => res.json())
+      .then((realtimeData: Partial<DataResponse>) => {
+        console.log("Realtime Data:", realtimeData); // Debugging
+
         const warningSensors: ActionMessage[] = [];
-        ["nitrogen", "fosfor", "kalium", "soil_ph", "soil_temp"].forEach((key) => {
-          if (jsonData[key]) {
-            jsonData[key].forEach((sensor: any) => {
+        (["nitrogen", "fosfor", "kalium", "soil_ph"] as (keyof DataResponse)[]).forEach((key) => {
+          if (Array.isArray(realtimeData[key])) {
+            realtimeData[key]?.forEach((sensor) => {
               if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
                 warningSensors.push({
-                  sensor_name: sensor.sensor_name,
-                  action_message: sensor.action_message,
-                  status_message: sensor.status_message,
-                  value_status: sensor.value_status,
+                  sensor_name: sensor.sensor_name || key,
+                  action_message: sensor.action_message ?? "Periksa segera!",
+                  status_message: sensor.status_message ?? "",
+                  value_status: sensor.value_status ?? "Warning",
                 });
               }
             });
           }
         });
+
         setActionMessages(warningSensors);
+
+        // Update state with realtime data
+        setData((prev) => ({
+          ...prev,
+          ...realtimeData,
+        }));
       })
       .catch((error) => console.error("Error fetching realtime data:", error));
   }, [siteId]);
@@ -124,8 +121,9 @@ export default function dashboard() {
         <Site onSiteChange={(id) => setSiteId(id)} />
         <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
       </div>
+
       <div className="flex gap-2">
-        <div className="bg-gray-600 h-[500px] rounded-xl w-3/4 overflow-hidden relative">
+        <div className="bg-gray-300 h-auto rounded-xl w-4/6 overflow-hidden relative">
           <Map />
           <FloatingGallery />
         </div>
@@ -135,73 +133,101 @@ export default function dashboard() {
               <div className="bg-abu p-2 rounded-md">
                 <h5 className="mb-5 font-medium">Komoditas</h5>
                 <span className="font-bold text-xl">
-                  {data.plants.length > 0 ? data.plants[0].commodity : "Unknown Plant"}
+                  {data.plants?.length ? data.plants[0].commodity : "Unknown Plant"}
                 </span>
               </div>
               <div className="bg-abu p-2 rounded-md">
                 <h5 className="mb-5 font-medium">Varietas</h5>
                 <span className="font-bold text-xl">
-                  {data.plants.length > 0 ? data.plants[0].variety : "Unknown Plant"}
+                  {data.plants?.length ? data.plants[0].variety : "Unknown Plant"}
                 </span>
               </div>
             </div>
             <div className="bg-abu p-2 rounded-md">
               <h5 className="mb-5 font-medium">Umur Tanam</h5>
               <span className="font-bold text-xl">
-                {data.plants.length > 0 ? `${data.plants[0].age} HST` : "N/A"}
+                {data.plants?.length ? `${data.plants[0].age} HST` : "N/A"}
               </span>
             </div>
             <div className="bg-abu p-2 rounded-md">
               <h5 className="mb-5 font-medium">Tanggal Tanam</h5>
               <span className="font-bold text-xl">
-                {data.plants.length > 0 ? data.plants[0].pl_date_planting : "N/A"}
-              </span>
-            </div>
-            <div className="bg-abu p-2 rounded-md">
-              <h5 className="mb-5 font-medium">Fase Tanam</h5>
-              <span className="font-bold text-xl">
-                {data.plants.length > 0 ? data.plants[0].phase : "N/A"}
+                {data.plants?.length ? data.plants[0].pl_date_planting : "N/A"}
               </span>
             </div>
             <div className="bg-primary p-2 rounded-md text-white">
               <h5 className="mb-5 font-medium">Waktu Menuju Panen</h5>
               <span className="font-bold text-xl">
-                {data.plants.length > 0 ? `${data.plants[0].timeto_harvest} Hari` : "N/A"}
+                {data.plants?.length ? `${data.plants[0].timeto_harvest} Hari` : "N/A"}
               </span>
             </div>
           </div>
         </div>
       </div>
+
       <div className="flex gap-2 mt-2">
         <div className="flex-grow">
           <h5 className="font-bold text-2xl mb-5">Indikator Lingkungan</h5>
           <div className="grid grid-cols-2 gap-2">
-            <IndikatorSuhu suhu={parseFloat(data.temperature.data.read_value)} />
-            <IndikatorKelembapan humid={parseFloat(data.humidity.data.read_value)} />
-            <IndikatorAngin wind={parseFloat(data.wind.data.read_value)} />
-            <IndikatorCahaya lux={parseFloat(data.lux.data.read_value)} />
-            <IndikatorHujan rain={parseFloat(data.rain.data.read_value)} />
+            <IndikatorSuhu suhu={parseFloat(data.temperature?.data.read_value || "0")} />
+            <IndikatorKelembapan humid={parseFloat(data.humidity?.data.read_value || "0")} />
+            <IndikatorAngin wind={parseFloat(data.wind?.data.read_value || "0")} />
+            <IndikatorCahaya lux={parseFloat(data.lux?.data.read_value || "0")} />
+            <IndikatorHujan rain={parseFloat(data.rain?.data.read_value || "0")} />
           </div>
         </div>
         <div className="bg-abu rounded-md p-4 basis-3/6">
           <h5 className="font-bold text-2xl mb-5">Peringatan</h5>
-          <div className="grid grid-rows-1 gap-2">
-            {actionMessages.length > 0 ? (
-              actionMessages.map((msg, index) => (
-                <Warning
-                  key={index}
-                  title={msg.status_message}
-                  sensor={msg.sensor_name}
-                  aksi={msg.action_message}
-                  status={msg.value_status}
-                />
-              ))
-            ) : (
-              <p className="text-gray-600">Tidak ada peringatan.</p>
-            )}
+          <div className="p-4 rounded-md overflow-y-auto max-h-[280px]">
+            <div className="grid gap-2">
+              {actionMessages.length > 0 ? (
+                actionMessages.map((msg: ActionMessage, index: number) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-md text-white ${
+                      msg.value_status === "Danger" ? "bg-red-600" : "bg-yellow-500"
+                    }`}
+                  >
+                    <h4 className="font-bold">{msg.status_message}</h4>
+                    <p>Indikator: {msg.sensor_name}</p>
+                    <p className="mt-4 text-2xl font-bold">Aksi: {msg.action_message}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">Semua sensor dalam kondisi baik.</p>
+              )}
+            </div> 
           </div>
         </div>
       </div>
+
+      {data.soil_ph?.length ? (
+        <div>
+          {data.soil_ph.map((sensor, index) => {
+            const nitrogen = data.nitrogen?.[index]?.read_value || 0;
+            const fosfor = data.fosfor?.[index]?.read_value || 0;
+            const kalium = data.kalium?.[index]?.read_value || 0;
+            const ph = sensor.read_value || 0;
+
+            return (
+              <Realtime
+                key={sensor.sensor}
+                sensor={index + 1}
+                nitrogen={Number(nitrogen)}
+                fosfor={Number(fosfor)}
+                kalium={Number(kalium)}
+                ph={Number(ph)}
+                statusPh={sensor.value_status ?? ""}
+                statusNitrogen={data.nitrogen?.[index]?.value_status ?? ""}
+                statusFosfor={data.fosfor?.[index]?.value_status ?? ""}
+                statusKalium={data.kalium?.[index]?.value_status ?? "OK"}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-gray-600">Data sensor tidak tersedia.</p>
+      )}
     </div>
   );
 }

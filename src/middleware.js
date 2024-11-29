@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
 
     // Proxy semua permintaan yang diawali dengan `/api`
     if (pathname.startsWith("/api")) {
-        const url = new URL(request.nextUrl);
-        url.hostname = "api.kawaltani.id"; // Host API eksternal
-        url.port = "8095"; // Port API eksternal
-        url.pathname = pathname.replace("/api", "/kwt24/api"); // Path API eksternal
+        const targetUrl = new URL(`http://api.kawaltani.id:8082${pathname}${search}`); // Path API eksternal
 
         try {
-            const response = await fetch(url.toString(), {
+            const response = await fetch(targetUrl.toString(), {
                 method: request.method,
-                headers: request.headers,
-                body: request.body,
+                headers: {
+                    ...Object.fromEntries(request.headers),
+                    host: undefined, // Hapus header host
+                },
+                body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
             });
 
             // Buat respons dengan header CORS
@@ -28,7 +28,7 @@ export async function middleware(request) {
                 return new NextResponse(null, { headers, status: 204 });
             }
 
-            return new NextResponse(response.body, {
+            return new NextResponse(await response.text(), {
                 headers,
                 status: response.status,
             });

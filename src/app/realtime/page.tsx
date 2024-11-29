@@ -4,6 +4,14 @@ import { useEffect, useState } from "react";
 import SensorRealtime from "../Components/sensorRealtime";
 import Map from "../Components/map";
 import Site from "../Components/dropdownSite";
+import Warning from "../Components/warning/anomali"; // Sesuaikan path sesuai dengan struktur proyek Anda
+
+interface ActionMessage {
+    sensor_name: string;
+    action_message: string;
+    status_message: string;
+    value_status: string;
+}
 
 interface Sensor {
     sensor: string;
@@ -39,11 +47,10 @@ interface DataResponse {
 export default function Realtime() {
     const [siteId, setSiteId] = useState<string>("SITE001");
     const [data, setData] = useState<DataResponse | null>(null);
+    const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
 
     useEffect(() => {
         if (!siteId) return;
-        console.log("Fetching data for siteId:", siteId);
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
         fetch(`/api/realtime?site_id=${siteId}`, {
             method: "GET",
@@ -58,8 +65,26 @@ export default function Realtime() {
                 return response.json();
             })
             .then((jsonData: DataResponse) => {
-                console.log("Received data:", jsonData);
                 setData(jsonData);
+
+                // Deteksi sensor dengan masalah
+                const warningSensors: ActionMessage[] = [];
+                (["nitrogen", "fosfor", "kalium", "soil_ph", "soil_temp"] as (keyof DataResponse)[]).forEach((key) => {
+                    if (Array.isArray(jsonData[key])) {
+                        jsonData[key]?.forEach((sensor) => {
+                            if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
+                                warningSensors.push({
+                                    sensor_name: sensor.sensor_name || key,
+                                    action_message: sensor.action_message || "Periksa segera!",
+                                    status_message: sensor.status_message,
+                                    value_status: sensor.value_status || "Warning",
+                                });
+                            }
+                        });
+                    }
+                });
+
+                setActionMessages(warningSensors);
             })
             .catch((error) => console.error("Error fetching data:", error));
     }, [siteId]);
@@ -70,20 +95,48 @@ export default function Realtime() {
                 <Site onSiteChange={(id) => setSiteId(id)} />
                 <span className="text-right">Update Terakhir: 12121</span>
             </div>
-            <div className="bg-gray-600 flex-grow-[3] h-[500px] rounded-xl max-w-screen-2xl overflow-hidden">
-                <Map />
+            <div className="flex gap-4 items-start">
+                {/* Map */}
+                <div className="flex-grow h-[500px] w-2/3 rounded-xl overflow-hidden relative bg-gray-100">
+                    <Map />
+                </div>
+
+                {/* Notifikasi */}
+                <div className="w-1/3 p-4 bg-gray-100 rounded-xl overflow-y-auto max-h-[500px]">
+                    <h2 className="text-xl font-bold mb-4 bg-gray-100 w-full">Peringatan</h2>
+                    <div className="grid gap-2">
+                        {actionMessages.length > 0 ? (
+                            actionMessages.map((msg: ActionMessage, index: number) => (
+                                <div
+                                    key={index}
+                                    className={`p-4 rounded-md text-white ${
+                                        msg.value_status === "Danger" ? "bg-red-600" : "bg-yellow-500"
+                                    }`}
+                                >
+                                    <h4 className="font-bold">{msg.status_message}</h4>
+                                    <p>Indikator: {msg.sensor_name}</p>
+                                    <p className="mt-4 text-2xl font-bold">Aksi: {msg.action_message}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-600">Semua sensor dalam kondisi baik.</p>
+                        )}
+                    </div>
+                </div>
             </div>
+
+
+
             {data && (
                 <div>
                     {data.soil_temp.map((sensor, index) => {
-                        // Validasi panjang array atau objek tunggal
-                        const hasSoilHum = !!data.soil_hum?.read_value; // soil_hum adalah objek tunggal
+                        const hasSoilHum = !!data.soil_hum?.read_value;
                         const hasNitrogen = index < (data.nitrogen?.length || 0);
                         const hasFosfor = index < (data.fosfor?.length || 0);
                         const hasKalium = index < (data.kalium?.length || 0);
                         const hasSoilPh = index < (data.soil_ph?.length || 0);
-                        const hasEc = !!data.ec?.read_value; // ec adalah objek tunggal
-                        const hasTds = !!data.tds?.read_value; // tds adalah objek tunggal
+                        const hasEc = !!data.ec?.read_value;
+                        const hasTds = !!data.tds?.read_value;
 
                         return (
                             <SensorRealtime
