@@ -20,6 +20,9 @@ export async function middleware(request) {
                 },
                 body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
             });
+            console.log("Request to middleware:", request.nextUrl.toString());
+            console.log("Proxying to external API:", externalUrl);
+
 
             // Transfer respons dari API eksternal ke klien
             const headers = new Headers(response.headers);
