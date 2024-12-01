@@ -5,8 +5,9 @@ export async function middleware(request) {
 
     // Tangkap semua permintaan yang diawali dengan `/api`
     if (pathname.startsWith("/api")) {
-        const baseURL = "http://api.kawaltani.id:8082";
-        const targetUrl = `${baseURL}${pathname}${search}`;
+        const baseURL = "http://127.0.0.1:8000/";
+        const targetUrl = baseURL.replace(/\/$/, '') + pathname + search;
+
 
         console.log("Middleware Proxying to:", targetUrl); // Debugging
 

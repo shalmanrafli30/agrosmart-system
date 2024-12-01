@@ -29,19 +29,6 @@ interface SensorRealtime {
   sensor_name?: string;
 }
 
-interface DataResponse {
-  nitrogen?: SensorRealtime[];
-  fosfor?: SensorRealtime[];
-  kalium?: SensorRealtime[];
-  soil_ph?: SensorRealtime[];
-  temperature?: { data: { read_value: string } };
-  humidity?: { data: { read_value: string } };
-  wind?: { data: { read_value: string } };
-  lux?: { data: { read_value: string } };
-  rain?: { data: { read_value: string } };
-  plants?: Plant[];
-}
-
 interface Plant {
   pl_id: number;
   pl_name: string;
@@ -53,6 +40,36 @@ interface Plant {
   commodity: string;
   variety: string;
 }
+
+interface DataResponse {
+  nitrogen?: SensorRealtime[];
+  fosfor?: SensorRealtime[];
+  kalium?: SensorRealtime[];
+  soil_ph?: SensorRealtime[];
+  temperature?: { data: { read_value: string } };
+  humidity?: { data: { read_value: string } };
+  wind?: { data: { read_value: string } };
+  lux?: { data: { read_value: string } };
+  rain?: { data: { read_value: string } };
+  plants?: Plant[];
+  last_updated?: string;
+  todos?: {
+    plant_id: number;
+    todos: {
+      hand_title: string;
+      hand_day: number;
+      hand_day_toleran: number;
+      fertilizer_type: string;
+      todo_date: string;
+      tolerant_date: string;
+      days_remaining: number;
+      days_tolerant_remaining: number;
+    }[];
+  }[];
+}
+
+
+
 
 export default function Dashboard() {
   const [siteId, setSiteId] = useState<string>("SITE001");
@@ -68,7 +85,10 @@ export default function Dashboard() {
     lux: { data: { read_value: "0" } },
     rain: { data: { read_value: "0" } },
     plants: [],
+    last_updated: "",
+    todos: [],
   });
+  
 
   useEffect(() => {
     if (!siteId) return;
@@ -89,7 +109,7 @@ export default function Dashboard() {
         console.log("Realtime Data:", realtimeData); // Debugging
 
         const warningSensors: ActionMessage[] = [];
-        (["nitrogen", "fosfor", "kalium", "soil_ph"] as (keyof DataResponse)[]).forEach((key) => {
+        (["soil_ph"] as (keyof DataResponse)[]).forEach((key) => {
           if (Array.isArray(realtimeData[key])) {
             realtimeData[key]?.forEach((sensor) => {
               if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
@@ -119,7 +139,7 @@ export default function Dashboard() {
     <div className="p-6">
       <div className="flex justify-between items-center w-full mb-4">
         <Site onSiteChange={(id) => setSiteId(id)} />
-        <span className="text-right">Update Terakhir: 16/10/2024 21:35 PM</span>
+        <span className="text-right">Update Terakhir: {data.last_updated || "Data tidak tersedia"}</span>
       </div>
 
       <div className="flex gap-2">
@@ -155,6 +175,12 @@ export default function Dashboard() {
                 {data.plants?.length ? data.plants[0].pl_date_planting : "N/A"}
               </span>
             </div>
+            <div className="bg-abu p-2 rounded-md">
+              <h5 className="mb-5 font-medium">Fase</h5>
+              <span className="font-bold text-xl">
+                {data.plants?.length ? data.plants[0].phase : "N/A"}
+              </span>
+            </div>
             <div className="bg-primary p-2 rounded-md text-white">
               <h5 className="mb-5 font-medium">Waktu Menuju Panen</h5>
               <span className="font-bold text-xl">
@@ -165,7 +191,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex gap-2 mt-2">
+      <div className="flex gap-2 mt-2 mb-5">
         <div className="flex-grow">
           <h5 className="font-bold text-2xl mb-5">Indikator Lingkungan</h5>
           <div className="grid grid-cols-2 gap-2">
@@ -177,8 +203,26 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="bg-abu rounded-md p-4 basis-3/6">
+          {/* TUGAS */}
+          <div className="mb-5">
+            <h5 className="font-bold text-2xl mb-5">Tugas</h5>
+            {data.todos && data.todos.length > 0 ? (
+              data.todos.map((todoGroup, groupIndex) =>
+                todoGroup.todos.map((todo, index) => (
+                  <div key={`${groupIndex}-${index}`} className="p-4 rounded-md text-black bg-[#E0E0E0] mb-3">
+                    <h4 className="font-bold text-2xl">{todo.hand_title}</h4>
+                    <span className="mt-4 font-normal">Waktu: <strong>{todo.todo_date}</strong></span>
+                  </div>
+                ))
+              )
+            ) : (
+              <p className="text-gray-600">Tidak ada tugas saat ini.</p>
+            )}
+          </div>
+
+          {/* PERINGATAN */}
           <h5 className="font-bold text-2xl mb-5">Peringatan</h5>
-          <div className="p-4 rounded-md overflow-y-auto max-h-[280px]">
+          <div className="rounded-md overflow-y-auto max-h-[280px]">
             <div className="grid gap-2">
               {actionMessages.length > 0 ? (
                 actionMessages.map((msg: ActionMessage, index: number) => (
@@ -201,33 +245,36 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {data.soil_ph?.length ? (
-        <div>
-          {data.soil_ph.map((sensor, index) => {
-            const nitrogen = data.nitrogen?.[index]?.read_value || 0;
-            const fosfor = data.fosfor?.[index]?.read_value || 0;
-            const kalium = data.kalium?.[index]?.read_value || 0;
-            const ph = sensor.read_value || 0;
+      <div className="mt-2">
+        <h3 className="font-bold text-2xl mb-5">Realtime</h3>
+        {data.soil_ph?.length ? (
+          <div className="mt-5">
+            {data.soil_ph.map((sensor, index) => {
+              const nitrogen = data.nitrogen?.[index]?.read_value || 0;
+              const fosfor = data.fosfor?.[index]?.read_value || 0;
+              const kalium = data.kalium?.[index]?.read_value || 0;
+              const ph = sensor.read_value || 0;
 
-            return (
-              <Realtime
-                key={sensor.sensor}
-                sensor={index + 1}
-                nitrogen={Number(nitrogen)}
-                fosfor={Number(fosfor)}
-                kalium={Number(kalium)}
-                ph={Number(ph)}
-                statusPh={sensor.value_status ?? ""}
-                statusNitrogen={data.nitrogen?.[index]?.value_status ?? ""}
-                statusFosfor={data.fosfor?.[index]?.value_status ?? ""}
-                statusKalium={data.kalium?.[index]?.value_status ?? "OK"}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <p className="text-gray-600">Data sensor tidak tersedia.</p>
-      )}
+              return (
+                <Realtime
+                  key={sensor.sensor}
+                  sensor={index + 1}
+                  nitrogen={Number(nitrogen)}
+                  fosfor={Number(fosfor)}
+                  kalium={Number(kalium)}
+                  ph={Number(ph)}
+                  statusPh={sensor.value_status ?? ""}
+                  statusNitrogen={data.nitrogen?.[index]?.value_status ?? ""}
+                  statusFosfor={data.fosfor?.[index]?.value_status ?? ""}
+                  statusKalium={data.kalium?.[index]?.value_status ?? "OK"}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-gray-600">Data sensor tidak tersedia.</p>
+        )}
+      </div>
     </div>
   );
 }

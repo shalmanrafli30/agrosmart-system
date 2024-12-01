@@ -69,7 +69,7 @@ export default function Realtime() {
 
                 // Deteksi sensor dengan masalah
                 const warningSensors: ActionMessage[] = [];
-                (["nitrogen", "fosfor", "kalium", "soil_ph", "soil_temp"] as (keyof DataResponse)[]).forEach((key) => {
+                (["soil_ph", "soil_temp"] as (keyof DataResponse)[]).forEach((key) => {
                     if (Array.isArray(jsonData[key])) {
                         jsonData[key]?.forEach((sensor) => {
                             if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
@@ -97,7 +97,7 @@ export default function Realtime() {
             </div>
             <div className="flex gap-4 items-start">
                 {/* Map */}
-                <div className="flex-grow h-[500px] w-2/3 rounded-xl overflow-hidden relative bg-gray-100">
+                <div className="flex-grow h-3/5 w-2/5 rounded-xl overflow-hidden relative bg-gray-100">
                     <Map />
                 </div>
 
@@ -115,7 +115,7 @@ export default function Realtime() {
                                 >
                                     <h4 className="font-bold">{msg.status_message}</h4>
                                     <p>Indikator: {msg.sensor_name}</p>
-                                    <p className="mt-4 text-2xl font-bold">Aksi: {msg.action_message}</p>
+                                    <p className="mt-4 text-xl font-bold">Aksi: {msg.action_message}</p>
                                 </div>
                             ))
                         ) : (
