@@ -19,12 +19,15 @@ interface SensorRealtimeProps {
 const SensorRealtime: React.FC<SensorRealtimeProps> = ({ sensor, nitrogen, fosfor, kalium, ph, statusPh, statusNitrogen, statusFosfor, statusKalium }) => {
     return (
         <div className="mt-5">
-            <div className="bg-abu w-full rounded-md grid grid-cols-4 gap-2 p-4">
+            <div className="bg-abu w-full rounded-md  p-4">
                 <h3 className="font-bold text-2xl mb-5 w-full">Area {sensor}</h3>
-                <IndikatorPh ph={ph} status={statusPh}/>
-                <IndikatorNitrogen nitrogen={nitrogen} />
-                <IndikatorFosfor fosfor={fosfor} />
-                <IndikatorKalium kalium={kalium} />
+                <div className="grid grid-cols-4 gap-2">
+                    <IndikatorPh ph={ph} status={statusPh}/>
+                    <IndikatorNitrogen nitrogen={nitrogen} status={statusNitrogen}/>
+                    <IndikatorFosfor fosfor={fosfor} status={statusFosfor}/>
+                    <IndikatorKalium kalium={kalium} status={statusKalium}/>
+                </div>
+                
             </div>
         </div>
     );

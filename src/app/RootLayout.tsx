@@ -18,38 +18,31 @@ export default function RootLayout({
 
   useEffect(() => {
     // Update activePage based on the current pathname
-    switch (pathname) {
-      case "/realtime":
+    switch (true) {
+      case pathname === "/realtime":
         setActivePage("Realtime");
         break;
-      case "/riwayat":
+      case pathname === "/riwayat":
         setActivePage("Riwayat");
         break;
-      case "/area":
-        setActivePage("Area");
+      case pathname === "/plant":
+      case pathname === "/plant/tambah-plant":
+      case pathname === "/plant/edit-plant":
+        setActivePage("Tanaman");
         break;
-      case "/area/tambah-area":
-        setActivePage("Area");
-        break;
-      case "/area/edit-area":
-        setActivePage("Area");
-        break;
-      case "/sensor":
+      case pathname === "/sensor":
+      case pathname === "/sensor/tambah-sensor":
+      case pathname?.startsWith("/sensor/edit-sensor"):
         setActivePage("Sensor");
         break;
-      case "/sensor/tambah-sensor":
-        setActivePage("Sensor");
-        break;
-      case "/sensor/edit-sensor":
-        setActivePage("Sensor");
-        break;
-      case "/profil":
+      case pathname === "/profil":
         setActivePage("Profil");
         break;
       default:
         setActivePage("Dashboard"); // Fallback to "Dashboard"
     }
   }, [pathname]); // Run effect when pathname changes
+  
 
   return (
     <html lang="en">

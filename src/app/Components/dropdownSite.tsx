@@ -6,8 +6,8 @@ interface DropdownSiteProps {
 
 const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
   const Sites = [
-      { id: "SITE001", title: "Poktan Giri Utami, Desa Putrajawa, Kab. Garut" },
-      // { id: "SITE002", title: "SITE002 - Lahan Padi" },
+    { id: "SITE000", title: "Poktan Pasir Malang, Desa Langensari, Kecamatan Karangtengah, Kab. Cianjur" },
+    // { id: "SITE001", title: "Poktan Giri Utami, Desa Putrajawa, Kab. Garut" },
     //   Poktan Giri Utami, Desa Putrajawa, Kab. Garut
     // Poktan Pasir Malang, Desa Langensari, Kecamapatan Karangtengah, Kab. Cianjur
   ];
@@ -18,7 +18,7 @@ const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
           <select
               name="site"
               className="bg-white font-bold"
-              defaultValue="SITE001" // Set default value
+              defaultValue="SITE000" // Set default value
               onChange={(event) => onSiteChange(event.target.value)}
           >
               {Sites.map((site) => (

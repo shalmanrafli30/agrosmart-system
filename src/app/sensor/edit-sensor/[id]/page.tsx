@@ -20,7 +20,7 @@ async function fetchSensorData(sensorId: string): Promise<SensorData | null> {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     try {
-        const response = await fetch(`/api/sensor/${sensorId}`, {
+        const response = await fetch(`${API_URL}/api/sensor/${sensorId}`, {
             cache: "no-store", // Pastikan mendapatkan data terbaru
         });
 

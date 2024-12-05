@@ -1,7 +1,7 @@
 import { MdDashboard } from "react-icons/md";
 import { AiFillDashboard } from "react-icons/ai";
 import { Ri24HoursLine } from "react-icons/ri";
-import { PiMapPinAreaFill } from "react-icons/pi";
+import { PiPlantFill } from "react-icons/pi";
 import { MdOutlineSensors } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import Garis from "../assets/3Garis.svg";
@@ -20,7 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
         { title: "Dashboard", path: "/dashboard", icon: <MdDashboard /> },
         { title: "Realtime", path: "/realtime", icon: <AiFillDashboard />, spacing: true },
         { title: "Riwayat", path: "/riwayat", icon: <Ri24HoursLine /> },
-        { title: "Area", path: "/area", icon: <PiMapPinAreaFill />, spacing: true },
+        { title: "Tanaman", path: "/plant", icon: <PiPlantFill />, spacing: true },
         { title: "Sensor", path: "/sensor", icon: <MdOutlineSensors /> },
     ];
 

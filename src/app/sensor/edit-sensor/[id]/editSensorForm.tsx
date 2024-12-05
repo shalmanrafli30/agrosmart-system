@@ -26,7 +26,7 @@ export default function EditSensorFormClient({ sensorData: initialSensorData }: 
 
         try {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
-            const response = await fetch(`/api/sensor/${sensorData.ds_id}`, {
+            const response = await fetch(`${API_URL}/api/sensor/${sensorData.ds_id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

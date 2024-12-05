@@ -28,31 +28,24 @@ interface DataResponse {
     nitrogen: Sensor[];
     fosfor: Sensor[];
     kalium: Sensor[];
-    tds: {
-        read_value: string | number;
-        sensor_name?: string;
-    };
-    ec: {
-        read_value: string | number;
-        sensor_name?: string;
-    };
-    soil_hum: {
-        read_value: string | number;
-        sensor_name?: string;
-    };
+    tds: Sensor[]
+    ec: Sensor[]
+    soil_hum: Sensor[]
     soil_ph: Sensor[];
     soil_temp: Sensor[];
+    last_updated?: string;
 }
 
 export default function Realtime() {
-    const [siteId, setSiteId] = useState<string>("SITE001");
+    const [siteId, setSiteId] = useState<string>("SITE000");
     const [data, setData] = useState<DataResponse | null>(null);
     const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         if (!siteId) return;
 
-        fetch(`/api/realtime?site_id=${siteId}`, {
+        fetch(`${API_URL}/api/realtime?site_id=${siteId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -69,7 +62,7 @@ export default function Realtime() {
 
                 // Deteksi sensor dengan masalah
                 const warningSensors: ActionMessage[] = [];
-                (["soil_ph", "soil_temp"] as (keyof DataResponse)[]).forEach((key) => {
+                (["soil_ph", "soil_temp", "soil_hum", "nitrogen", "fosfor", "kalium", "ec", "tds"] as (keyof DataResponse)[]).forEach((key) => {
                     if (Array.isArray(jsonData[key])) {
                         jsonData[key]?.forEach((sensor) => {
                             if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
@@ -93,7 +86,7 @@ export default function Realtime() {
         <div className="p-6">
             <div className="flex justify-between items-center w-full mb-4">
                 <Site onSiteChange={(id) => setSiteId(id)} />
-                <span className="text-right">Update Terakhir: 12121</span>
+                <span className="text-right">Update Terakhir: {data?.last_updated || "Data tidak tersedia"}</span>
             </div>
             <div className="flex gap-4 items-start">
                 {/* Map */}
@@ -113,9 +106,9 @@ export default function Realtime() {
                                         msg.value_status === "Danger" ? "bg-red-600" : "bg-yellow-500"
                                     }`}
                                 >
-                                    <h4 className="font-bold">{msg.status_message}</h4>
+                                    <h4 className="font-bold text-2xl">{msg.status_message}</h4>
                                     <p>Indikator: {msg.sensor_name}</p>
-                                    <p className="mt-4 text-xl font-bold">Aksi: {msg.action_message}</p>
+                                    <p className="mt-4 text-lg font-bold">Aksi: {msg.action_message}</p>
                                 </div>
                             ))
                         ) : (
@@ -130,31 +123,34 @@ export default function Realtime() {
             {data && (
                 <div>
                     {data.soil_temp.map((sensor, index) => {
-                        const hasSoilHum = !!data.soil_hum?.read_value;
+                        const hasSoilHum = index < (data.soil_hum?.length || 0);
                         const hasNitrogen = index < (data.nitrogen?.length || 0);
                         const hasFosfor = index < (data.fosfor?.length || 0);
                         const hasKalium = index < (data.kalium?.length || 0);
                         const hasSoilPh = index < (data.soil_ph?.length || 0);
-                        const hasEc = !!data.ec?.read_value;
-                        const hasTds = !!data.tds?.read_value;
+                        const hasEc = index < (data.ec?.length || 0);
+                        const hasTds = index < (data.tds?.length || 0);
 
                         return (
                             <SensorRealtime
                                 key={sensor.sensor}
                                 sensor={index + 1}
                                 suhu={Number(sensor.read_value) || 0}
-                                humid={hasSoilHum ? Number(data.soil_hum.read_value) : 0}
+                                humid={hasSoilHum ? Number(data.soil_hum[index]?.read_value) : 0}
                                 nitrogen={hasNitrogen ? Number(data.nitrogen[index]?.read_value) : 0}
                                 fosfor={hasFosfor ? Number(data.fosfor[index]?.read_value) : 0}
                                 kalium={hasKalium ? Number(data.kalium[index]?.read_value) : 0}
                                 ph={hasSoilPh ? Number(data.soil_ph[index]?.read_value) : 0}
-                                ec={hasEc ? Number(data.ec.read_value) : 0}
-                                tds={hasTds ? Number(data.tds.read_value) : 0}
+                                ec={hasEc ? Number(data.ec[index]?.read_value) : 0}
+                                tds={hasTds ? Number(data.tds[index]?.read_value) : 0}
                                 statusPh={hasSoilPh ? data.soil_ph[index]?.value_status || "" : ""}
                                 statusSuhu={sensor.value_status || ""}
                                 statusNitrogen={hasNitrogen ? data.nitrogen[index]?.value_status || "" : ""}
                                 statusFosfor={hasFosfor ? data.fosfor[index]?.value_status || "" : ""}
                                 statusKalium={hasKalium ? data.kalium[index]?.value_status || "OK" : "OK"}
+                                statusHumid={hasSoilHum ? data.soil_hum[index]?.value_status || "OK" : "OK"}
+                                statusEc={hasEc ? data.ec[index]?.value_status || "OK" : "OK"}
+                                statusTDS={hasTds ? data.tds[index]?.value_status || "OK" : "OK"}
                             />
                         );
                     })}

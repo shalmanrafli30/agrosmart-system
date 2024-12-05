@@ -19,7 +19,7 @@ interface SensorData {
 }
 
 export default function Page() {
-    const [siteId, setSiteId] = useState<string>("SITE001");
+    const [siteId, setSiteId] = useState<string>("SITE000");
     const [sensorData, setSensorData] = useState<SensorData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export default function Page() {
             setIsLoading(true);
             setError(null); // Reset error state before fetching
             try {
-                const response = await fetch(`/api/sensor?site_id=${siteId}`);
+                const response = await fetch(`${API_URL}/api/sensor?site_id=${siteId}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch data: ${response.statusText}`);
                 }
@@ -53,26 +53,22 @@ export default function Page() {
         <section>
             <Header title="Sensor" />
             <div className="p-6">
-                {/* Site Dropdown to Change Site ID */}
                 <Site onSiteChange={(id) => setSiteId(id)} />
-
-                {/* Add Sensor Button */}
-                <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor" />
-
+                {/* <AddSensor route="/sensor/tambah-sensor" title="Tambah Sensor" /> */}
                 <div>
                     <div className="relative overflow-x-auto">
                         <table className="w-full text-base text-left rtl:text-right text-gray-500">
                             <thead className="text-base text-black uppercase bg-abu2 border-2 border-abu3">
                                 <tr>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">ID Sensor</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Label</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Nilai Normal</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Normal Bawah</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Normal Atas</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Bawah</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Atas</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Status</th>
-                                    <th scope="col" className="px-6 py-3 border-r-2 border-abu3">Aksi</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">ID Sensor</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Label</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Batas Nilai Normal</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Batas Normal Bawah</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Batas Normal Atas</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Bawah</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Batas Peringatan Atas</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Status</th>
+                                    <th className="px-6 py-3 border-r-2 border-abu3">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,9 +85,9 @@ export default function Page() {
                                 ) : sensorData.length > 0 ? (
                                     sensorData.map((sensor, index) => (
                                         <tr key={index} className="bg-white border-2 border-abu3 text-black">
-                                            <th scope="row" className="px-6 py-4 border-r-2 border-abu3 font-normal">
+                                            <td scope="row" className="px-6 py-4 border-r-2 border-abu3 font-normal">
                                                 {sensor.ds_id}
-                                            </th>
+                                            </td>
                                             <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_name}</td>
                                             <td className="px-6 py-4 border-r-2 border-abu3">{sensor.dc_normal_value}</td>
                                             <td className="px-6 py-4 border-r-2 border-abu3">{sensor.ds_min_norm_value}</td>
@@ -103,8 +99,8 @@ export default function Page() {
                                             </td>
                                             <td className="px-6 py-4 border-r-2 border-abu3 w-2">
                                                 <div className="flex space-x-2">
-                                                <EditSensor route={`/sensor/edit-sensor/${sensor.ds_id}`} />
-                                                    <Hapus className="cursor-pointer text-warningSecondary hover:text-warning" />
+                                                    <EditSensor route={`/sensor/edit-sensor/${sensor.ds_id}`} />
+                                                    {/* <Hapus className="cursor-pointer text-warningSecondary hover:text-warning" /> */}
                                                 </div>
                                             </td>
                                         </tr>

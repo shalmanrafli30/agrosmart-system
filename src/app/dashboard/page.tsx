@@ -41,16 +41,26 @@ interface Plant {
   variety: string;
 }
 
+interface EnvironmentData {
+  sensor: string;
+  read_value: number;
+  read_date: string | null;
+  value_status?: string;
+  status_message?: string;
+  action_message?: string;
+  sensor_name?: string;
+}
+
 interface DataResponse {
   nitrogen?: SensorRealtime[];
   fosfor?: SensorRealtime[];
   kalium?: SensorRealtime[];
   soil_ph?: SensorRealtime[];
-  temperature?: { data: { read_value: string } };
-  humidity?: { data: { read_value: string } };
-  wind?: { data: { read_value: string } };
-  lux?: { data: { read_value: string } };
-  rain?: { data: { read_value: string } };
+  temperature?: EnvironmentData[];
+  humidity?: EnvironmentData[];
+  wind?: EnvironmentData[];
+  lux?: EnvironmentData[];
+  rain?: EnvironmentData[];
   plants?: Plant[];
   last_updated?: string;
   todos?: {
@@ -68,22 +78,20 @@ interface DataResponse {
   }[];
 }
 
-
-
-
 export default function Dashboard() {
-  const [siteId, setSiteId] = useState<string>("SITE001");
+  const [siteId, setSiteId] = useState<string>("SITE000");
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([]);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [data, setData] = useState<DataResponse>({
     nitrogen: [],
     fosfor: [],
     kalium: [],
     soil_ph: [],
-    temperature: { data: { read_value: "0" } },
-    humidity: { data: { read_value: "0" } },
-    wind: { data: { read_value: "0" } },
-    lux: { data: { read_value: "0" } },
-    rain: { data: { read_value: "0" } },
+    temperature: [],
+    humidity: [],
+    wind: [],
+    lux: [],
+    rain: [],
     plants: [],
     last_updated: "",
     todos: [],
@@ -94,7 +102,7 @@ export default function Dashboard() {
     if (!siteId) return;
 
     // Fetch dashboard data
-    fetch(`/api/dashboard?site_id=${siteId}`)
+    fetch(`${API_URL}/api/dashboard?site_id=${siteId}`)
       .then((res) => res.json())
       .then((dashboardData: DataResponse) => {
         console.log("Dashboard Data:", dashboardData); // Debugging
@@ -103,13 +111,13 @@ export default function Dashboard() {
       .catch((error) => console.error("Error fetching dashboard data:", error));
 
     // Fetch realtime data
-    fetch(`/api/realtime?site_id=${siteId}`)
+    fetch(`${API_URL}/api/realtime?site_id=${siteId}`)
       .then((res) => res.json())
       .then((realtimeData: Partial<DataResponse>) => {
         console.log("Realtime Data:", realtimeData); // Debugging
 
         const warningSensors: ActionMessage[] = [];
-        (["soil_ph"] as (keyof DataResponse)[]).forEach((key) => {
+        (["soil_ph", "nitrogen", "fosfor", "kalium"] as (keyof DataResponse)[]).forEach((key) => {
           if (Array.isArray(realtimeData[key])) {
             realtimeData[key]?.forEach((sensor) => {
               if (sensor.value_status === "Warning" || sensor.value_status === "Danger") {
@@ -195,11 +203,11 @@ export default function Dashboard() {
         <div className="flex-grow">
           <h5 className="font-bold text-2xl mb-5">Indikator Lingkungan</h5>
           <div className="grid grid-cols-2 gap-2">
-            <IndikatorSuhu suhu={parseFloat(data.temperature?.data.read_value || "0")} />
-            <IndikatorKelembapan humid={parseFloat(data.humidity?.data.read_value || "0")} />
-            <IndikatorAngin wind={parseFloat(data.wind?.data.read_value || "0")} />
-            <IndikatorCahaya lux={parseFloat(data.lux?.data.read_value || "0")} />
-            <IndikatorHujan rain={parseFloat(data.rain?.data.read_value || "0")} />
+            <IndikatorSuhu suhu={data.temperature?.[0]?.read_value || 0} />
+            <IndikatorKelembapan humid={data.humidity?.[0]?.read_value || 0} />
+            <IndikatorAngin wind={data.wind?.[0]?.read_value || 0} />
+            <IndikatorCahaya lux={data.lux?.[0]?.read_value || 0} />
+            <IndikatorHujan rain={data.rain?.[0]?.read_value || 0} />
           </div>
         </div>
         <div className="bg-abu rounded-md p-4 basis-3/6">
@@ -211,7 +219,8 @@ export default function Dashboard() {
                 todoGroup.todos.map((todo, index) => (
                   <div key={`${groupIndex}-${index}`} className="p-4 rounded-md text-black bg-[#E0E0E0] mb-3">
                     <h4 className="font-bold text-2xl">{todo.hand_title}</h4>
-                    <span className="mt-4 font-normal">Waktu: <strong>{todo.todo_date}</strong></span>
+                    <p className="mt-4 font-normal">Waktu: <strong>{todo.todo_date}</strong></p>
+                    <p className="mt-4 font-normal">Pupuk: <strong>{todo.fertilizer_type}</strong></p>
                   </div>
                 ))
               )
@@ -232,9 +241,9 @@ export default function Dashboard() {
                       msg.value_status === "Danger" ? "bg-red-600" : "bg-yellow-500"
                     }`}
                   >
-                    <h4 className="font-bold">{msg.status_message}</h4>
+                    <h4 className="font-bold text-2xl">{msg.status_message}</h4>
                     <p>Indikator: {msg.sensor_name}</p>
-                    <p className="mt-4 text-2xl font-bold">Aksi: {msg.action_message}</p>
+                    <p className="mt-4 text-lg font-bold">Aksi: {msg.action_message}</p>
                   </div>
                 ))
               ) : (

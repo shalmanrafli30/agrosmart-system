@@ -5,31 +5,24 @@ export async function middleware(request) {
 
     // Tangkap semua permintaan yang diawali dengan `/api`
     if (pathname.startsWith("/api")) {
-        const baseURL = "http://127.0.0.1:8000/";
-        const targetUrl = baseURL.replace(/\/$/, '') + pathname + search;
-
+        const baseURL = "http://127.0.0.1:8000";
+        const targetUrl = `${baseURL}${pathname.replace('/api', '')}${search}`;
 
         console.log("Middleware Proxying to:", targetUrl); // Debugging
 
         try {
-            // Proxy request ke API eksternal
             const response = await fetch(targetUrl, {
                 method: request.method,
                 headers: {
-                    ...Object.fromEntries(request.headers),
-                    host: undefined, // Hapus header `host`
+                    ...Object.fromEntries(request.headers.entries()), // Salin header dari request asli
+                    host: undefined, // Hapus header `host` jika perlu
                 },
                 body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
             });
 
+            // Teruskan respons dari server eksternal
             const headers = new Headers(response.headers);
-            headers.set("Access-Control-Allow-Origin", "*");
-            headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-            if (request.method === "OPTIONS") {
-                return new NextResponse(null, { headers, status: 204 });
-            }
+            headers.set("Access-Control-Allow-Origin", "*"); // Untuk debugging lintas asal
 
             return new NextResponse(await response.text(), {
                 headers,
