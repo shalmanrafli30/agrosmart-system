@@ -11,7 +11,7 @@ const map = () => {
     return (
         <div className="relative w-full h-full">
             {/* Background Image (if needed) */}
-            <img src="/assets/img/Lahan.jpg" alt="gambar lahan" className="object-center object-cover" />
+            <img src="/assets/img/Lahan-cianjur.jpg" alt="gambar lahan" className="object- object-cover" />
             {/* Alert on Map */}
             {/* <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
                 <Alert1 className="object-cover object-center" />
