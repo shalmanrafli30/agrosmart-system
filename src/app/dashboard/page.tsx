@@ -83,21 +83,21 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem('token')
     const user = localStorage.getItem('user')
-
+  
+    // Redirect jika belum login
     if (!token || !user) {
       router.push('/login')
       return
     }
-
+  
+    // Jangan fetch kalau siteId belum siap atau belum valid
+    if (!siteId || siteId === 'undefined') return;
+  
     const headers = {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
     }
-
-    const parsedUser = JSON.parse(user)
-    const userSiteId = parsedUser.site_id || parsedUser.user_site_id || 'SITE002'
-    if (!siteId) setSiteId(userSiteId)
-
+  
     const fetchJSON = async (url: string) => {
       try {
         const res = await fetch(url, { headers })
@@ -108,18 +108,20 @@ export default function Dashboard() {
         return null
       }
     }
-
+  
     const fetchAll = async () => {
-      const dashData = await fetchJSON(`${API_URL}/api/dashboard?site_id=${userSiteId}`)
-      const realtimeData = await fetchJSON(`${API_URL}/api/realtime?site_id=${userSiteId}`)
-
+      const dashData = await fetchJSON(`${API_URL}/api/dashboard?site_id=${siteId}`)
+      const realtimeData = await fetchJSON(`${API_URL}/api/realtime?site_id=${siteId}`)
+  
+      // === DASHBOARD DATA ===
       if (dashData) {
         setData(dashData)
-        const warning: ActionMessage[] = []
+        const warnings: ActionMessage[] = []
+  
         ;['temperature', 'humidity'].forEach((key) => {
           const d = dashData[key as keyof DataResponse] as EnvironmentData[]
           if (d?.[0]?.value_status && ['Warning', 'Danger'].includes(d[0].value_status)) {
-            warning.push({
+            warnings.push({
               sensor_name: d[0].sensor_name || key,
               status_message: d[0].status_message || '-',
               action_message: d[0].action_message || '-',
@@ -127,25 +129,25 @@ export default function Dashboard() {
             })
           }
         })
-        setActionMessages(warning)
+        setActionMessages(warnings)
       }
-
+  
+      // === REALTIME SENSOR DATA ===
       if (realtimeData?.sensors) {
         const grouped: Record<number, { nitrogen?: Sensor; fosfor?: Sensor; kalium?: Sensor; soil_ph?: Sensor }> = {}
         const warnings: ActionMessage[] = []
-
+  
         realtimeData.sensors.forEach((sensor: Sensor) => {
           const match = sensor.sensor.match(/(\d+)$/)
           if (!match) return
-
           const area = parseInt(match[1])
           if (!grouped[area]) grouped[area] = {}
-
+  
           if (sensor.sensor.startsWith('soil_nitro')) grouped[area].nitrogen = sensor
           else if (sensor.sensor.startsWith('soil_phos')) grouped[area].fosfor = sensor
           else if (sensor.sensor.startsWith('soil_pot')) grouped[area].kalium = sensor
           else if (sensor.sensor.startsWith('soil_ph')) grouped[area].soil_ph = sensor
-
+  
           if (sensor.value_status === 'Danger' || sensor.value_status === 'Warning') {
             warnings.push({
               sensor_name: sensor.sensor_name,
@@ -155,12 +157,12 @@ export default function Dashboard() {
             })
           }
         })
-
+  
         const soil_ph: Sensor[] = []
         const nitrogen: Sensor[] = []
         const fosfor: Sensor[] = []
         const kalium: Sensor[] = []
-
+  
         Object.keys(grouped).sort((a, b) => Number(a) - Number(b)).forEach(key => {
           const areaData = grouped[Number(key)]
           if (areaData.soil_ph) soil_ph.push(areaData.soil_ph)
@@ -168,21 +170,36 @@ export default function Dashboard() {
           if (areaData.fosfor) fosfor.push(areaData.fosfor)
           if (areaData.kalium) kalium.push(areaData.kalium)
         })
-
+  
         setData(prev => ({ ...prev, soil_ph, nitrogen, fosfor, kalium }))
         setActionMessages(prev => [...prev, ...warnings])
       }
     }
-
+  
     fetchAll()
   }, [siteId])
 
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    router.push('/login')
-  }
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  
+    try {
+      await fetch(`${API_URL}/api/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      router.push("/login");
+    }
+  };
+  
   return (
     <div className="p-6">
       <div className="flex justify-between items-center w-full mb-4">
