@@ -74,7 +74,12 @@ interface DataResponse {
 }
 
 export default function Dashboard() {
-  const [siteId, setSiteId] = useState<string | null>(null)
+  const [siteId, setSiteId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("selectedSiteId") || null;
+    }
+    return null;
+  });
   const [data, setData] = useState<DataResponse>({})
   const [actionMessages, setActionMessages] = useState<ActionMessage[]>([])
   const router = useRouter()
@@ -92,10 +97,9 @@ export default function Dashboard() {
   
     // Jangan fetch kalau siteId belum siap atau belum valid
     if (!siteId || siteId === 'undefined') return;
-  
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json',
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
     }
   
     const fetchJSON = async (url: string) => {
@@ -196,6 +200,7 @@ export default function Dashboard() {
     } finally {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("selectedSiteId");
       router.push("/login");
     }
   };

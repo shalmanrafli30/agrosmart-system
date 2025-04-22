@@ -19,46 +19,42 @@ const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
 
   useEffect(() => {
     const fetchSites = async () => {
-      const token = localStorage.getItem("token")
-      if (!token) return
-
+      const token = localStorage.getItem("token");
+      if (!token) return;
+  
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/sites`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/json',
           },
-        })
-
-        const data = await res.json()
-        console.log("Fetched site list:", data)
-
+        });
+  
+        const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setSites(data)
-
-          // Set selected site only once during mount
-          if (!hasInitialized) {
-            const firstSiteId = data[0].site_id
-            setSelectedSite(firstSiteId)
-            onSiteChange(firstSiteId)
-            setHasInitialized(true)
-          }
-        } else {
-          console.warn("No sites found or response malformed:", data)
+          setSites(data);
+  
+          const savedSite = localStorage.getItem("selectedSiteId");
+          const defaultSite = savedSite || data[0].site_id;
+  
+          setSelectedSite(defaultSite);
+          onSiteChange(defaultSite); // hanya set initial jika belum ada
         }
       } catch (err) {
-        console.error("Error fetching site list:", err)
+        console.error("Error fetching site list:", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-
-    fetchSites()
-  }, [onSiteChange, hasInitialized])
+    };
+  
+    fetchSites();
+  }, [onSiteChange]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newSite = e.target.value
     setSelectedSite(newSite)
+    localStorage.setItem("selectedSiteId", newSite); // ✅ Simpan ke localStorage
     onSiteChange(newSite)
   }
 
