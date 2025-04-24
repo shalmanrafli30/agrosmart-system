@@ -1,39 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // tambahkan ini
 import Site from "../Components/dropdownSite";
 import Select from "react-select";
 import dynamic from "next/dynamic";
 
-// Impor Chart secara dinamis
 const Chart = dynamic(() => import("../Components/Chart"), { ssr: false });
 
-// Fungsi transformasi data untuk ApexCharts
 function transformChartData(rawData: any[]) {
   const groupedData: Record<string, { x: string; y: number }[]> = {};
 
-  // Kelompokkan data berdasarkan ds_id (indikator)
   rawData.forEach((item) => {
-    const indicatorName = item.ds_id; // Gunakan ds_id sebagai nama indikator
+    const indicatorName = item.ds_id;
     if (!groupedData[indicatorName]) {
       groupedData[indicatorName] = [];
     }
+
+    // Gunakan read_update_date dan read_update_value yang memang ada
     groupedData[indicatorName].push({
-      x: `${item.read_date}T${item.read_time}`, // Gabungkan tanggal dan waktu untuk x-axis
-      y: parseFloat(item.read_value), // Nilai indikator
+      x: item.read_update_date,
+      y: parseFloat(item.read_update_value) || 0,
     });
   });
 
-  // Ubah groupedData menjadi format yang diterima ApexCharts
   return Object.entries(groupedData).map(([name, readings]) => ({
-    name, // Nama indikator
-    data: readings, // Data pembacaan
+    name,
+    data: readings,
   }));
 }
 
-// Komponen utama RiwayatPage
 export default function RiwayatPage() {
-  const [siteId, setSiteId] = useState<string>("SITE000");
+  const router = useRouter();
+  const [siteId, setSiteId] = useState<string | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<{ value: string; label: string }[]>([]);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
@@ -41,7 +40,21 @@ export default function RiwayatPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  // Fungsi untuk mengambil data riwayat
+  // ✅ Check auth
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (!token || !user) {
+      router.push("/login");
+    } else {
+      const storedSiteId = localStorage.getItem("selectedSiteId");
+      if (storedSiteId) {
+        setSiteId(storedSiteId);
+      }
+    }
+  }, [router]);
+
   const fetchHistoryData = async () => {
     if (selectedSensors.length === 0 || !startDate || !endDate) {
       setErrorMessage("Please select all required fields.");
@@ -51,15 +64,17 @@ export default function RiwayatPage() {
     const requestBody = {
       site_id: siteId,
       areas: selectedSensors.map((sensor) => sensor.value),
+      sensors: ["all"],
       start_date: startDate,
       end_date: endDate,
     };
 
     try {
-      const response = await fetch(`${API_URL}/api/riwayat`, {
+      const response = await fetch(`${API_URL}/api/riwayat2`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ tambahkan ini
         },
         body: JSON.stringify(requestBody),
       });
@@ -88,7 +103,7 @@ export default function RiwayatPage() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center w-full mb-4">
+      <div className="flex justify-between items-center w-full">
         <Site onSiteChange={(id) => setSiteId(id)} />
         {/* <span className="text-right">Update Terakhir: {new Date().toLocaleString()}</span> */}
       </div>
