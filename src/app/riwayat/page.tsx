@@ -17,10 +17,10 @@ function transformChartData(rawData: any[]) {
       groupedData[indicatorName] = [];
     }
 
-    // Gunakan read_update_date dan read_update_value yang memang ada
+    // Gunakan read_date dan read_value yang memang ada
     groupedData[indicatorName].push({
-      x: item.read_update_date,
-      y: parseFloat(item.read_update_value) || 0,
+      x: item.read_date,
+      y: parseFloat(item.read_value) || 0,
     });
   });
 

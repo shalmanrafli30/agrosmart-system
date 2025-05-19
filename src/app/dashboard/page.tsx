@@ -21,8 +21,8 @@ interface ActionMessage {
 
 interface EnvironmentData {
   sensor: string
-  read_update_value: number
-  read_update_date: string | null
+  read_value: number
+  read_date: string | null
   value_status?: string
   status_message?: string
   action_message?: string
@@ -276,11 +276,11 @@ export default function Dashboard() {
         <div className="flex-grow">
           <h5 className="font-bold text-2xl mb-5">Indikator Lingkungan</h5>
           <div className="grid grid-cols-2 gap-2">
-            <IndikatorSuhu suhu={data.temperature?.[0]?.read_update_value || 0} />
-            <IndikatorKelembapan humid={data.humidity?.[0]?.read_update_value || 0} />
-            <IndikatorAngin wind={data.wind?.[0]?.read_update_value || 0} />
-            <IndikatorCahaya lux={data.lux?.[0]?.read_update_value || 0} />
-            <IndikatorHujan rain={data.rain?.[0]?.read_update_value || 0} />
+            <IndikatorSuhu suhu={data.temperature?.[0]?.read_value || 0} />
+            <IndikatorKelembapan humid={data.humidity?.[0]?.read_value || 0} />
+            <IndikatorAngin wind={data.wind?.[0]?.read_value || 0} />
+            <IndikatorCahaya lux={data.lux?.[0]?.read_value || 0} />
+            <IndikatorHujan rain={data.rain?.[0]?.read_value || 0} />
           </div>
         </div>
 
