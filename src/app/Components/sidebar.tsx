@@ -4,6 +4,7 @@ import { Ri24HoursLine } from "react-icons/ri";
 import { PiPlantFill } from "react-icons/pi";
 import { MdOutlineSensors } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
+import { BsChat } from "react-icons/bs";
 import Garis from "../assets/3Garis.svg";
 import Silang from "../assets/Silang.svg";
 import Link from "next/link"; // Import Link dari Next.js
@@ -22,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
         { title: "Riwayat", path: "/riwayat", icon: <Ri24HoursLine /> },
         { title: "Tanaman", path: "/plant", icon: <PiPlantFill />, spacing: true },
         { title: "Sensor", path: "/sensor", icon: <MdOutlineSensors /> },
+        { title: "Chatbot", path: "/chatbot", icon: <BsChat /> },
     ];
 
     return (
