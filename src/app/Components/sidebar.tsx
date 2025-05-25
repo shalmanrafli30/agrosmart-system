@@ -5,6 +5,7 @@ import { PiPlantFill } from "react-icons/pi";
 import { MdOutlineSensors } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { BsChat } from "react-icons/bs";
+import { usePathname } from "next/navigation";
 import Garis from "../assets/3Garis.svg";
 import Silang from "../assets/Silang.svg";
 import Link from "next/link"; // Import Link dari Next.js
@@ -17,6 +18,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActivePage }) => {
+    const pathname = usePathname();
+
     const Menus = [
         { title: "Dashboard", path: "/dashboard", icon: <MdDashboard /> },
         { title: "Realtime", path: "/realtime", icon: <AiFillDashboard />, spacing: true },
@@ -25,6 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
         { title: "Sensor", path: "/sensor", icon: <MdOutlineSensors /> },
         { title: "Chatbot", path: "/chatbot", icon: <BsChat /> },
     ];
+    const currentPage = Menus.find(menu => pathname.startsWith(menu.path))?.title;
 
     return (
         <div className={`${open ? "w-72" : "w-20"} h-screen bg-darkCustom duration-300 flex flex-col fixed top-0 left-0`}>
@@ -46,10 +50,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
                         >
                             <Link href={menu.path} passHref>
                                 <div className="flex items-center w-full" onClick={() => setActivePage(menu.title)}>
-                                    <span className={`block text-3xl ${activePage === menu.title ? "text-primary" : ""}`}>
+                                    <span className={`block text-3xl ${currentPage === menu.title ? "text-primary" : ""}`}>
                                         {menu.icon}
                                     </span>
-                                    <span className={`text-xl font-medium flex ${!open && "hidden"} ${activePage === menu.title ? "text-primary" : ""} ml-4`}>
+                                    <span className={`text-xl font-medium flex ${!open && "hidden"} ${currentPage === menu.title ? "text-primary" : ""} ml-4`}>
                                         {menu.title}
                                     </span>
                                 </div>
