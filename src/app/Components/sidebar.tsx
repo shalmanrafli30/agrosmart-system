@@ -4,7 +4,8 @@ import { Ri24HoursLine } from "react-icons/ri";
 import { PiPlantFill } from "react-icons/pi";
 import { MdOutlineSensors } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
-import { BsChat } from "react-icons/bs";
+import { IoChatbubbleSharp } from "react-icons/io5";
+import { RiPlantFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import Garis from "../assets/3Garis.svg";
 import Silang from "../assets/Silang.svg";
@@ -26,7 +27,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
         { title: "Riwayat", path: "/riwayat", icon: <Ri24HoursLine /> },
         { title: "Tanaman", path: "/plant", icon: <PiPlantFill />, spacing: true },
         { title: "Sensor", path: "/sensor", icon: <MdOutlineSensors /> },
-        { title: "Chatbot", path: "/chatbot", icon: <BsChat /> },
+        { title: "Chatbot", path: "/chatbot", icon: <IoChatbubbleSharp />, spacing: true  },
+        { title: "Deteksi Fase Padi", path: "/deteksi-fase-padi", icon: <RiPlantFill /> },
     ];
     const currentPage = Menus.find(menu => pathname.startsWith(menu.path))?.title;
 
