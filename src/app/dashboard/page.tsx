@@ -231,38 +231,38 @@ export default function Dashboard() {
         <div className="flex-grow">
           <div className="flex flex-col gap-y-2">
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-abu p-2 rounded-md">
+              <div className="bg-abu p-2 rounded-md shadow-md">
                 <h5 className="mb-5 font-medium">Komoditas</h5>
                 <span className="font-bold text-xl">
                   {data.plants?.length ? data.plants[0].commodity : "Unknown Plant"}
                 </span>
               </div>
-              <div className="bg-abu p-2 rounded-md">
+              <div className="bg-abu p-2 rounded-md shadow-md">
                 <h5 className="mb-5 font-medium">Varietas</h5>
                 <span className="font-bold text-xl">
                   {data.plants?.length ? data.plants[0].variety : "Unknown Plant"}
                 </span>
               </div>
             </div>
-            <div className="bg-abu p-2 rounded-md">
+            <div className="bg-abu p-2 rounded-md shadow-md">
               <h5 className="mb-5 font-medium">Umur Tanam</h5>
               <span className="font-bold text-xl">
                 {data.plants?.length ? `${data.plants[0].age} HST` : "N/A"}
               </span>
             </div>
-            <div className="bg-abu p-2 rounded-md">
+            <div className="bg-abu p-2 rounded-md shadow-md">
               <h5 className="mb-5 font-medium">Tanggal Tanam</h5>
               <span className="font-bold text-xl">
                 {data.plants?.length ? data.plants[0].pl_date_planting : "N/A"}
               </span>
             </div>
-            <div className="bg-abu p-2 rounded-md">
+            <div className="bg-abu p-2 rounded-md shadow-md">
               <h5 className="mb-5 font-medium">Fase</h5>
               <span className="font-bold text-xl">
                 {data.plants?.length ? data.plants[0].phase : "N/A"}
               </span>
             </div>
-            <div className="bg-primary p-2 rounded-md text-white">
+            <div className="bg-primary p-2 rounded-md text-white shadow-md">
               <h5 className="mb-5 font-medium">Waktu Menuju Panen</h5>
               <span className="font-bold text-xl">
                 {data.plants?.length ? `${data.plants[0].timeto_harvest} Hari` : "N/A"}
@@ -284,7 +284,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-abu rounded-md p-4 basis-3/6">
+        <div className="bg-abu rounded-md p-4 basis-3/6 shadow-md">
           {/* TUGAS */}
           <div className="mb-5">
             <h5 className="font-bold text-2xl mb-5">Tugas</h5>
