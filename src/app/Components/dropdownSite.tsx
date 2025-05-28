@@ -60,7 +60,7 @@ const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
 
   return (
     <div className="mb-6">
-      <span>Lokasi:</span>
+      <span>Lahan:</span>
       <select
         name="site"
         className="bg-white font-bold"
