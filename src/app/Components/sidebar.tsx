@@ -7,6 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoChatbubbleSharp } from "react-icons/io5";
 import { RiPlantFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
+import { FaLocationDot } from "react-icons/fa6";
 import Garis from "../assets/3Garis.svg";
 import Silang from "../assets/Silang.svg";
 import Link from "next/link"; // Import Link dari Next.js
@@ -23,9 +24,10 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen, activePage, setActiveP
 
     const Menus = [
         { title: "Dashboard", path: "/dashboard", icon: <MdDashboard /> },
-        { title: "Realtime", path: "/realtime", icon: <AiFillDashboard />, spacing: true },
+        { title: "Realtime", path: "/realtime", icon: <AiFillDashboard /> },
         { title: "Riwayat", path: "/riwayat", icon: <Ri24HoursLine /> },
-        { title: "Tanaman", path: "/plant", icon: <PiPlantFill />, spacing: true },
+        { title: "Lahan", path: "/lahan", icon: <FaLocationDot />, spacing: true  },
+        { title: "Tanaman", path: "/plant", icon: <PiPlantFill /> },
         { title: "Sensor", path: "/sensor", icon: <MdOutlineSensors /> },
         { title: "Chatbot", path: "/chatbot", icon: <IoChatbubbleSharp />, spacing: true  },
         { title: "Deteksi Fase Padi", path: "/deteksi-fase-padi", icon: <RiPlantFill /> },

@@ -23,23 +23,24 @@ const DropdownSite: React.FC<DropdownSiteProps> = ({ onSiteChange }) => {
       if (!token) return;
   
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/sites`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/site`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/json',
           },
         });
   
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setSites(data);
-  
+        const result = await res.json();
+        if (Array.isArray(result.data) && result.data.length > 0) {
+          setSites(result.data);
+
           const savedSite = localStorage.getItem("selectedSiteId");
-          const defaultSite = savedSite || data[0].site_id;
-  
+          const defaultSite = savedSite || result.data[0].site_id;
+
           setSelectedSite(defaultSite);
-          onSiteChange(defaultSite); // hanya set initial jika belum ada
+          onSiteChange(defaultSite);
         }
+
       } catch (err) {
         console.error("Error fetching site list:", err);
       } finally {

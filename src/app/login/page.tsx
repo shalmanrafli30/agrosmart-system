@@ -87,6 +87,9 @@ export default function LoginPage() {
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                required
+                onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Nama pengguna harus diisi')}
+                onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
               />
             </div>
 
@@ -101,6 +104,9 @@ export default function LoginPage() {
                   value={userPass}
                   onChange={(e) => setUserPass(e.target.value)}
                   className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 pr-10"
+                  required
+                  onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Kata sandi harus diisi')}
+                  onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
                 />
                 <button
                   type="button"
